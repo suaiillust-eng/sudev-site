@@ -1,0 +1,82 @@
+---
+import Base from '../layouts/Base.astro';
+import { site, xUrl } from '../data/site';
+import { withBase } from '../lib/url';
+
+/** ポリシー改定時はこの日付を更新する */
+const updatedAt = '2026年9月12日';
+---
+
+<Base
+  title="Privacy Policy"
+  description="SUdev 公式サイトのプライバシーポリシーです。"
+  path="/privacy"
+>
+  <section class="section">
+    <div class="container narrow">
+      <p class="eyebrow">Privacy Policy</p>
+      <h1 class="section-title">プライバシーポリシー</h1>
+      <p class="updated">最終更新日：{updatedAt}</p>
+
+      <h2>1. このページについて</h2>
+      <p>
+        本ポリシーは、SUdev が運営する本ウェブサイト（以下「本サイト」）における個人情報の取り扱いについて定めたものです。
+        SUdev が提供する各アプリの個人情報の取り扱いについては、それぞれのアプリのプライバシーポリシーをご確認ください。
+      </p>
+
+      <h2>2. 収集する情報</h2>
+      <p>
+        本サイトは、閲覧にあたって氏名・メールアドレスなどの個人情報の入力を求めることはありません。
+        また、アクセス解析ツールおよび広告配信のための Cookie は使用していません。
+      </p>
+
+      <h2>3. お問い合わせ時の情報の取り扱い</h2>
+      <p>
+        お問い合わせをいただいた場合、返信および内容の確認のために、いただいた連絡先と本文の内容を利用します。
+        これらの情報を、ご本人の同意なく第三者へ提供することはありません。
+      </p>
+
+      <h2>4. 外部サービスへのリンク</h2>
+      <p>
+        本サイトには App Store や X などの外部サービスへのリンクが含まれます。
+        リンク先での情報の取り扱いについては、各サービスのプライバシーポリシーをご確認ください。
+      </p>
+
+      <h2>5. 各アプリのプライバシーポリシー</h2>
+      <p>
+        各アプリで個別に定めているプライバシーポリシーは、アプリ内の設定画面、または App Store の配信ページからご確認いただけます。
+      </p>
+
+      <h2>6. 本ポリシーの変更</h2>
+      <p>
+        本ポリシーの内容は、必要に応じて変更することがあります。変更後の内容は本ページに掲載した時点から適用されます。
+      </p>
+
+      <h2>7. お問い合わせ</h2>
+      <p>
+        本ポリシーに関するお問い合わせは、
+        <a href={withBase('/contact')}>お問い合わせページ</a>
+        {xUrl ? ' または X アカウント' : ''}よりご連絡ください。
+      </p>
+
+      <p class="sign">{site.name}</p>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .narrow { max-width: 720px; }
+  .updated { color: var(--text-dim); font-size: 13px; margin: 12px 0 36px; }
+
+  h2 {
+    font-size: 17px;
+    font-weight: 700;
+    margin: 34px 0 10px;
+  }
+
+  p { color: var(--text-muted); font-size: 14.5px; margin: 0; }
+
+  a { color: var(--text); }
+
+  .sign { margin-top: 40px; color: var(--text-dim); font-size: 13px; }
+</style>

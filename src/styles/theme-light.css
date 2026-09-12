@@ -1,0 +1,53 @@
+/* ライトテーマ。ダークに戻すときは global.css の @import を theme-dark.css に変える */
+:root {
+  color-scheme: light;
+
+  --bg: #fbfbfd;
+  --bg-soft: #f2f4f7;
+  --surface: #ffffff;
+  --surface-2: #eef1f6;
+  --media-bg: #ffffff;
+  --icon-bg: #ffffff;
+
+  --line: rgba(17, 22, 31, 0.10);
+  --line-strong: rgba(17, 22, 31, 0.18);
+
+  --text: #151a21;
+  --text-muted: #525a67;
+  --text-dim: #858d9a;
+
+  --accent: #2f63f0;
+  --accent-2: #12a565;
+  /* アプリごとのアクセント（--app-accent）を混ぜる割合。白背景で読める濃さに寄せる。
+     混色はコンポーネント側（--app-accent が効く要素）で行う。 */
+  --accent-text-amt: 72%;
+  --accent-text-base: #16202e;
+  --tint-strong-amt: 16%;
+  --tint-soft-amt: 8%;
+  --tint-head-amt: 10%;
+  --tint-line-amt: 70%;
+  --tint-border-amt: 40%;
+
+  --chip-bg: rgba(17, 22, 31, 0.035);
+  --chip-bg-hover: rgba(17, 22, 31, 0.06);
+  --chip-border-hover: rgba(17, 22, 31, 0.3);
+
+  --btn-solid-bg: #151a21;
+  --btn-solid-bg-hover: #000000;
+  --btn-solid-fg: #ffffff;
+
+  --header-bg: rgba(251, 251, 253, 0.92);
+
+  --warn-text: #96600a;
+  --warn-border: rgba(196, 129, 15, 0.4);
+  --warn-bg: rgba(196, 129, 15, 0.08);
+
+  --shadow-icon: 0 4px 14px rgba(17, 22, 31, 0.10);
+  --shadow-card: 0 1px 2px rgba(17, 22, 31, 0.04);
+  --shadow-card-hover: 0 6px 22px rgba(17, 22, 31, 0.09);
+  --shadow-phone: 0 10px 28px rgba(17, 22, 31, 0.14);
+
+  --hero-glow-1: rgba(47, 99, 240, 0.09);
+  --hero-glow-2: rgba(18, 165, 101, 0.07);
+  --hero-title: linear-gradient(120deg, #151a21 25%, #2f63f0 100%);
+}

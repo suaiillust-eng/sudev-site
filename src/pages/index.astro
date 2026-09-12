@@ -1,0 +1,227 @@
+---
+import Base from '../layouts/Base.astro';
+import FeaturedApp from '../components/FeaturedApp.astro';
+import AppCard from '../components/AppCard.astro';
+import { apps, featured, otherReleased, releasedApps } from '../data/apps';
+import { site, xUrl } from '../data/site';
+import { withBase } from '../lib/url';
+
+const featuredList = featured();
+const others = otherReleased();
+const releasedCount = releasedApps().length;
+---
+
+<Base title={site.name} description={site.description} path="/">
+  <section class="hero">
+    <div class="container">
+      <p class="hero-eyebrow">Apps made by SUdev</p>
+      <h1 class="hero-title">SUdev</h1>
+      <p class="hero-lead">
+        個人開発でアプリをつくっています。<br />
+        麻雀のデータ管理からペットのアルバムまで、{releasedCount}本のアプリを公開しています。
+      </p>
+      <div class="hero-actions">
+        <a class="btn btn-store" href="#featured">アプリを見る</a>
+        {xUrl && (
+          <a class="btn btn-ghost" href={xUrl} target="_blank" rel="noopener">X をフォロー</a>
+        )}
+      </div>
+      <ul class="hero-icons" aria-hidden="true">
+        {apps.filter((a) => a.icon).map((a) => (
+          <li><img class="icon-img" src={withBase(a.icon)} alt="" width="40" height="40" decoding="async" /></li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section class="section" id="featured">
+    <div class="container">
+      <div class="section-head">
+        <p class="eyebrow">Featured Apps</p>
+        <h2 class="section-title">いま力を入れているアプリ</h2>
+        <p class="section-note">3本のアプリを詳しく紹介しています。</p>
+      </div>
+      <div class="featured-list">
+        {featuredList.map((app, i) => <FeaturedApp app={app} lead={i === 0} index={i} />)}
+      </div>
+    </div>
+  </section>
+
+  {others.length > 0 && (
+    <section class="section section-alt" id="apps">
+      <div class="container">
+        <div class="section-head">
+          <p class="eyebrow">All Apps</p>
+          <h2 class="section-title">そのほかのアプリ</h2>
+          <p class="section-note">SUdev がこれまでにリリースした全{releasedCount}本のうち、Featured 以外の{others.length}本です。</p>
+        </div>
+        <div class="grid">
+          {others.map((app) => <AppCard app={app} />)}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <section class="section" id="x">
+    <div class="container">
+      <div class="x-card">
+        <div class="x-body">
+          <img
+            class="x-avatar"
+            src={withBase('/brand/avatar.webp')}
+            alt=""
+            width="64"
+            height="64"
+            loading="lazy"
+            decoding="async"
+          />
+          <div>
+            <p class="eyebrow">X</p>
+            <h2 class="section-title">開発状況を X で発信しています</h2>
+            <p class="x-note">
+              アプリのアップデートや新しいアプリの開発状況を投稿しています。
+              {site.xHandle && <span class="x-handle">@{site.xHandle}</span>}
+            </p>
+          </div>
+        </div>
+        {xUrl ? (
+          <a class="btn btn-store" href={xUrl} target="_blank" rel="noopener">X を見る</a>
+        ) : (
+          <p class="x-todo">※ X アカウントは準備中です。</p>
+        )}
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-alt" id="about">
+    <div class="container about">
+      <p class="eyebrow">About</p>
+      <h2 class="section-title">SUdev について</h2>
+      <p class="about-text">
+        SUdev は個人開発でアプリを制作しています。<br />
+        日々使うものを、自分が欲しい形でつくっています。
+      </p>
+      <a class="btn btn-ghost" href={withBase('/contact')}>お問い合わせ</a>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .hero {
+    position: relative;
+    padding-block: clamp(56px, 14vw, 120px) clamp(40px, 9vw, 72px);
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: -40% 0 auto;
+    height: 520px;
+    background:
+      radial-gradient(58% 60% at 22% 42%, var(--hero-glow-1), transparent 70%),
+      radial-gradient(48% 54% at 78% 38%, var(--hero-glow-2), transparent 70%);
+    pointer-events: none;
+  }
+
+  .hero > .container { position: relative; }
+
+  .hero-eyebrow {
+    font-size: 12.5px;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin: 0 0 14px;
+  }
+
+  .hero-title {
+    font-size: clamp(46px, 14vw, 88px);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1.05;
+    background: var(--hero-title);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .hero-lead {
+    margin: 20px 0 0;
+    font-size: clamp(15px, 3.6vw, 17px);
+    color: var(--text-muted);
+    max-width: 34em;
+  }
+
+  .hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 30px;
+  }
+
+  .hero-icons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    list-style: none;
+    margin: 44px 0 0;
+    padding: 0;
+    opacity: 0.9;
+  }
+
+  .hero-icons img { width: 40px; height: 40px; }
+
+  .section-alt { background: var(--bg-soft); border-block: 1px solid var(--line); }
+
+  .featured-list {
+    display: grid;
+    gap: clamp(16px, 3.4vw, 24px);
+  }
+
+  .grid {
+    display: grid;
+    gap: 14px;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  }
+
+  .x-card {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    padding: clamp(22px, 5vw, 36px);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--line);
+    background: var(--surface);
+    box-shadow: var(--shadow-card);
+  }
+
+  .x-body {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+  }
+
+  .x-avatar {
+    flex: none;
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    object-fit: cover;
+    background: var(--surface-2);
+    box-shadow: 0 0 0 1px var(--line-strong);
+  }
+
+  .x-note { margin: 10px 0 0; color: var(--text-muted); font-size: 14.5px; }
+
+  .x-handle {
+    display: inline-block;
+    margin-left: 6px;
+    color: var(--text-dim);
+  }
+  .x-todo { margin: 0; color: var(--text-dim); font-size: 13px; }
+
+  .about-text { color: var(--text-muted); margin: 14px 0 24px; }
+</style>

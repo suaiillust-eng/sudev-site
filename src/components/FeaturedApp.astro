@@ -1,0 +1,137 @@
+---
+import type { App } from '../data/apps';
+import AppIcon from './AppIcon.astro';
+import AppStoreButton from './AppStoreButton.astro';
+import AppVisual from './AppVisual.astro';
+import { withBase } from '../lib/url';
+
+interface Props {
+  app: App;
+  /** 1件目は一回り大きく見せる */
+  lead?: boolean;
+  index: number;
+}
+const { app, lead = false, index } = Astro.props;
+---
+
+<article class:list={['featured', lead && 'is-lead']} style={`--app-accent:${app.accent}`}>
+  <div class="body">
+    <div class="head">
+      <AppIcon app={app} size={lead ? 84 : 68} loading={index === 0 ? 'eager' : 'lazy'} />
+      <div>
+        <h3 class="name">{app.name}</h3>
+        <p class="tagline">{app.tagline}</p>
+        {app.notice && <span class="badge badge-notice notice">{app.notice}</span>}
+      </div>
+    </div>
+
+    <p class="summary">{app.summary}</p>
+
+    <ul class="chips">
+      {app.features.slice(0, 4).map((f) => <li>{f.title}</li>)}
+    </ul>
+
+    <div class="actions">
+      <a class="btn btn-ghost" href={withBase(`/apps/${app.slug}`)}>詳しく見る</a>
+      <AppStoreButton href={app.appStoreUrl} appName={app.name} />
+    </div>
+  </div>
+
+  <div class="media">
+    <AppVisual app={app} size={lead ? 'lg' : 'md'} />
+  </div>
+</article>
+
+<style>
+  .featured {
+    position: relative;
+    display: grid;
+    gap: clamp(20px, 4vw, 34px);
+    padding: clamp(20px, 4.6vw, 34px);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--line);
+    background:
+      radial-gradient(90% 120% at 0% 0%,
+        color-mix(in srgb, var(--app-accent) var(--tint-soft-amt), transparent), transparent 60%),
+      var(--surface);
+    box-shadow: var(--shadow-card);
+    overflow: hidden;
+  }
+
+  .featured::before {
+    content: '';
+    position: absolute;
+    inset-inline: 0;
+    top: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--app-accent), transparent 70%);
+  }
+
+  .head {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 16px;
+  }
+
+  .name {
+    font-size: clamp(21px, 4.6vw, 27px);
+    font-weight: 800;
+  }
+
+  .is-lead .name { font-size: clamp(24px, 5.6vw, 32px); }
+
+  .tagline {
+    margin: 2px 0 0;
+    font-size: 13.5px;
+    color: color-mix(in srgb, var(--app-accent) var(--accent-text-amt), var(--accent-text-base));
+    font-weight: 600;
+    line-height: 1.6;
+  }
+
+  .notice { margin-top: 8px; }
+
+  .summary {
+    margin: 0;
+    color: var(--text-muted);
+    font-size: 15px;
+  }
+
+  .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    list-style: none;
+    margin: 18px 0 0;
+    padding: 0;
+  }
+
+  .chips li {
+    padding: 5px 12px;
+    border-radius: 999px;
+    border: 1px solid var(--line);
+    background: var(--chip-bg);
+    font-size: 12.5px;
+    color: var(--text-muted);
+    line-height: 1.6;
+  }
+
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 22px;
+  }
+
+  .actions :global(.btn) { flex: 1 1 160px; }
+
+  @media (min-width: 760px) {
+    .featured {
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+    }
+    .featured.is-lead { grid-template-columns: 1fr 1.05fr; }
+    .featured:nth-of-type(even) .body { order: 2; }
+    .actions :global(.btn) { flex: 0 0 auto; }
+  }
+</style>

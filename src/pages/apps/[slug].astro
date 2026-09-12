@@ -1,0 +1,239 @@
+---
+import Base from '../../layouts/Base.astro';
+import AppIcon from '../../components/AppIcon.astro';
+import AppStoreButton from '../../components/AppStoreButton.astro';
+import AppCard from '../../components/AppCard.astro';
+import { apps, type App } from '../../data/apps';
+import { withBase } from '../../lib/url';
+
+export function getStaticPaths() {
+  return apps.map((app) => ({ params: { slug: app.slug }, props: { app } }));
+}
+
+interface Props {
+  app: App;
+}
+
+const { app } = Astro.props;
+const isDev = app.status === 'development';
+const related = apps.filter((a) => a.slug !== app.slug).slice(0, 3);
+---
+
+<Base
+  title={app.name}
+  description={`${app.name}｜${app.tagline}。${app.summary}`}
+  path={`/apps/${app.slug}`}
+>
+  <article>
+    <section class="head" style={`--app-accent:${app.accent}`}>
+      <div class="container">
+        <a class="back" href={withBase('/#featured')}>← SUdev のアプリ一覧</a>
+        <div class="head-grid">
+          <div>
+            <div class="title-row">
+              <AppIcon app={app} size={96} loading="eager" />
+              <div>
+                <h1>{app.name}</h1>
+                <p class="tagline">{app.tagline}</p>
+              </div>
+            </div>
+            <p class="desc">{app.description}</p>
+            <div class="meta">
+              {isDev && <span class="badge badge-dev">{app.progress ?? '開発中'}</span>}
+              {!isDev && app.appStoreUrl && <span class="badge">App Store 公開中</span>}
+              {app.notice && <span class="badge badge-notice">{app.notice}</span>}
+              {app.platforms.map((p) => <span class="badge">{p}</span>)}
+            </div>
+            {app.notice && (
+              <p class="notice-note">
+                {app.notice}です。参加をご希望の方は
+                <a href={withBase('/contact')}>お問い合わせ</a>
+                からご連絡ください。
+              </p>
+            )}
+
+            <div class="actions">
+              <AppStoreButton href={app.appStoreUrl} appName={app.name} />
+              {!app.appStoreUrl && (
+                <p class="store-note">
+                  {isDev ? '公開に向けて開発中です。' : 'App Store のリンクは準備中です。'}
+                </p>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    {app.features.length > 0 && (
+    <section class="section section-alt">
+      <div class="container">
+        <div class="section-head">
+          <p class="eyebrow">Features</p>
+          <h2 class="section-title">主な機能</h2>
+        </div>
+        <ul class="features" style={`--app-accent:${app.accent}`}>
+          {app.features.map((f) => (
+            <li>
+              <h3>{f.title}</h3>
+              <p>{f.body}</p>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+    )}
+
+    {app.screenshots.length > 0 && (
+      <section class="section">
+        <div class="container">
+          <div class="section-head">
+            <p class="eyebrow">Screenshots</p>
+            <h2 class="section-title">画面</h2>
+          </div>
+          <div class="shots">
+            {app.screenshots.map((s) => (
+              <figure>
+                <img src={withBase(s.src)} alt={s.alt} loading="lazy" decoding="async" />
+              </figure>
+            ))}
+          </div>
+        </div>
+      </section>
+    )}
+
+    <section class="section section-alt">
+      <div class="container">
+        <div class="section-head">
+          <p class="eyebrow">Other Apps</p>
+          <h2 class="section-title">SUdev の他のアプリ</h2>
+        </div>
+        <div class="grid">
+          {related.map((a) => <AppCard app={a} />)}
+        </div>
+      </div>
+    </section>
+  </article>
+</Base>
+
+<style>
+  .head {
+    position: relative;
+    padding-block: 28px clamp(28px, 5vw, 52px);
+    overflow: hidden;
+  }
+
+  .head::before {
+    content: '';
+    position: absolute;
+    inset: 0 0 auto;
+    height: 420px;
+    background: radial-gradient(60% 60% at 20% 0%,
+      color-mix(in srgb, var(--app-accent) var(--tint-head-amt), transparent), transparent 70%);
+    pointer-events: none;
+  }
+
+  .head > .container { position: relative; }
+
+  .back {
+    display: inline-block;
+    margin-bottom: clamp(22px, 5vw, 36px);
+    font-size: 13.5px;
+    color: var(--text-muted);
+    text-decoration: none;
+  }
+  .back:hover { color: var(--text); }
+
+  .head-grid { max-width: 680px; }
+
+  .title-row { display: flex; align-items: center; gap: 16px; }
+  .title-row :global(.icon-img) {
+    flex: none;
+    width: clamp(72px, 16vw, 96px) !important;
+    height: clamp(72px, 16vw, 96px) !important;
+  }
+
+  h1 { font-size: clamp(28px, 7vw, 42px); font-weight: 800; }
+
+  .tagline {
+    margin: 4px 0 0;
+    font-size: 14px;
+    font-weight: 600;
+    color: color-mix(in srgb, var(--app-accent) var(--accent-text-amt), var(--accent-text-base));
+  }
+
+  .desc { color: var(--text-muted); margin: 22px 0 0; font-size: 15px; }
+
+  .meta { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 20px; }
+
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+    margin-top: 24px;
+  }
+
+  .store-note { margin: 0; font-size: 13px; color: var(--text-dim); }
+
+  .notice-note {
+    margin: 20px 0 0;
+    padding: 14px 16px;
+    border-radius: var(--radius);
+    border: 1px solid color-mix(in srgb, var(--accent) 30%, var(--line));
+    background: color-mix(in srgb, var(--accent) 8%, transparent);
+    font-size: 14px;
+    color: var(--text-muted);
+  }
+
+  .notice-note a { color: var(--text); }
+
+  .features {
+    display: grid;
+    gap: 14px;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .features li {
+    padding: 20px;
+    border-radius: var(--radius);
+    border: 1px solid var(--line);
+    background: var(--surface);
+    box-shadow: var(--shadow-card);
+    border-left: 3px solid color-mix(in srgb, var(--app-accent) var(--tint-line-amt), transparent);
+  }
+
+  .features h3 { font-size: 16px; font-weight: 700; }
+  .features p { margin: 8px 0 0; font-size: 14px; color: var(--text-muted); line-height: 1.8; }
+
+  .shots {
+    display: grid;
+    gap: 18px;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  }
+
+  .shots figure { margin: 0; }
+
+  .shots img {
+    border-radius: 20px;
+    border: 1px solid var(--line);
+    background: var(--media-bg);
+    box-shadow: var(--shadow-phone);
+  }
+
+  .grid {
+    display: grid;
+    gap: 14px;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  }
+
+  /* スマホでは2列にして縦に伸びすぎないようにする */
+  @media (max-width: 560px) {
+    .shots { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+  }
+
+
+</style>

@@ -1,0 +1,54 @@
+---
+import type { App } from '../data/apps';
+import { withBase } from '../lib/url';
+
+interface Props {
+  app: App;
+  size: number;
+  /** 装飾目的（近くに名前がある場合）は alt を空にする */
+  decorative?: boolean;
+  loading?: 'eager' | 'lazy';
+}
+
+const { app, size, decorative = false, loading = 'lazy' } = Astro.props;
+const alt = decorative ? '' : `${app.name} のアプリアイコン`;
+---
+
+{
+  app.icon ? (
+    <img
+      class="icon-img"
+      src={withBase(app.icon)}
+      alt={alt}
+      width={size}
+      height={size}
+      loading={loading}
+      decoding="async"
+      style={`width:${size}px;height:${size}px`}
+    />
+  ) : (
+    <span
+      class="icon-img icon-mono"
+      style={`--app-accent:${app.accent};width:${size}px;height:${size}px;font-size:${Math.round(size * 0.42)}px`}
+      role={decorative ? 'presentation' : 'img'}
+      aria-label={decorative ? undefined : alt}
+    >
+      {app.name.charAt(0)}
+    </span>
+  )
+}
+
+<style>
+  .icon-mono {
+    display: grid;
+    place-items: center;
+    flex: none;
+    font-weight: 800;
+    letter-spacing: 0;
+    color: color-mix(in srgb, var(--app-accent) 82%, var(--text));
+    background:
+      linear-gradient(150deg, color-mix(in srgb, var(--app-accent) 22%, transparent), transparent 70%),
+      var(--surface-2);
+    border: 1px solid var(--line);
+  }
+</style>

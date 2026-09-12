@@ -1,0 +1,54 @@
+/* ダークテーマ（初期版）。global.css の @import を切り替えると戻せる */
+:root {
+  color-scheme: dark;
+
+  --bg: #0a0b0e;
+  --bg-soft: #101218;
+  --surface: #14161d;
+  --surface-2: #1a1d26;
+  --media-bg: #000000;
+  --icon-bg: #1a1d26;
+
+  --line: rgba(255, 255, 255, 0.09);
+  --line-strong: rgba(255, 255, 255, 0.16);
+
+  --text: #f3f4f7;
+  --text-muted: #a2a8b4;
+  --text-dim: #6f7683;
+
+  --accent: #5b8cff;
+  --accent-2: #25c07a;
+  /* アプリごとのアクセント（--app-accent）を混ぜる割合。
+     色そのものをここで作ると :root では --app-accent が未定義になるため、
+     割合だけを渡して混色はコンポーネント側で行う。 */
+  --accent-text-amt: 72%;
+  --accent-text-base: #e9edf5;
+  --tint-strong-amt: 17%;
+  --tint-soft-amt: 9%;
+  --tint-head-amt: 13%;
+  --tint-line-amt: 70%;
+  --tint-border-amt: 46%;
+
+  --chip-bg: rgba(255, 255, 255, 0.03);
+  --chip-bg-hover: rgba(255, 255, 255, 0.06);
+  --chip-border-hover: rgba(255, 255, 255, 0.32);
+
+  --btn-solid-bg: #f3f4f7;
+  --btn-solid-bg-hover: #ffffff;
+  --btn-solid-fg: #0a0b0e;
+
+  --header-bg: rgba(10, 11, 14, 0.78);
+
+  --warn-text: #ffc457;
+  --warn-border: rgba(255, 196, 87, 0.4);
+  --warn-bg: rgba(255, 196, 87, 0.08);
+
+  --shadow-icon: 0 8px 22px rgba(0, 0, 0, 0.38);
+  --shadow-card: none;
+  --shadow-card-hover: none;
+  --shadow-phone: 0 18px 40px rgba(0, 0, 0, 0.5);
+
+  --hero-glow-1: rgba(91, 140, 255, 0.13);
+  --hero-glow-2: rgba(37, 192, 122, 0.08);
+  --hero-title: linear-gradient(120deg, #ffffff 35%, #c7d0e2 100%);
+}

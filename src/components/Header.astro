@@ -1,0 +1,99 @@
+---
+import { withBase } from '../lib/url';
+import { site, xUrl } from '../data/site';
+
+const home = withBase('/');
+const links = [
+  { label: 'Apps', href: `${home}#featured` },
+  { label: 'About', href: `${home}#about` },
+];
+---
+
+<header class="site-header">
+  <div class="container bar">
+    <a class="brand" href={home} aria-label={`${site.name} ホーム`}>
+      <img
+        class="mark"
+        src={withBase('/brand/avatar.webp')}
+        alt=""
+        width="28"
+        height="28"
+        decoding="async"
+      />
+      <span class="wordmark">{site.name}</span>
+    </a>
+    <nav aria-label="メインナビゲーション">
+      <ul>
+        {links.map((l) => (
+          <li><a href={l.href}>{l.label}</a></li>
+        ))}
+        {xUrl && (
+          <li><a href={xUrl} target="_blank" rel="noopener">X</a></li>
+        )}
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: var(--header-bg);
+    backdrop-filter: saturate(160%) blur(14px);
+    -webkit-backdrop-filter: saturate(160%) blur(14px);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    height: 60px;
+  }
+
+  .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    text-decoration: none;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+  }
+
+  .mark {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    object-fit: cover;
+    background: var(--surface-2);
+    box-shadow: 0 0 0 1px var(--line-strong);
+  }
+
+  .wordmark { font-size: 17px; }
+
+  nav ul {
+    display: flex;
+    align-items: center;
+    gap: clamp(14px, 3.4vw, 26px);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  nav a {
+    text-decoration: none;
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--text-muted);
+    white-space: nowrap;
+  }
+
+  nav a:hover { color: var(--text); }
+
+  @media (max-width: 420px) {
+    nav a { font-size: 12.5px; }
+  }
+</style>

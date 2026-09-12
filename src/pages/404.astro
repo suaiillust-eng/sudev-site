@@ -1,0 +1,20 @@
+---
+import Base from '../layouts/Base.astro';
+import { withBase } from '../lib/url';
+---
+
+<Base title="404" description="ページが見つかりませんでした。" path="/404">
+  <section class="section">
+    <div class="container center">
+      <p class="eyebrow">404</p>
+      <h1 class="section-title">ページが見つかりませんでした</h1>
+      <p class="note">URL が変更されたか、削除された可能性があります。</p>
+      <a class="btn btn-store" href={withBase('/')}>トップへ戻る</a>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .center { text-align: center; padding-block: clamp(30px, 10vw, 80px); }
+  .note { color: var(--text-muted); margin: 14px 0 26px; }
+</style>

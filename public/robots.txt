@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://suaiillust-eng.github.io/sudev-site/sitemap-index.xml

@@ -1,0 +1,61 @@
+---
+import Base from '../layouts/Base.astro';
+import { site, xUrl } from '../data/site';
+---
+
+<Base
+  title="Contact"
+  description="SUdev へのお問い合わせ窓口です。"
+  path="/contact"
+>
+  <section class="section">
+    <div class="container narrow">
+      <p class="eyebrow">Contact</p>
+      <h1 class="section-title">お問い合わせ</h1>
+      <p class="lead">
+        アプリの不具合報告・ご要望・その他のお問い合わせは、以下からご連絡ください。
+      </p>
+
+      <ul class="list">
+        {xUrl && (
+          <li>
+            <h2>X</h2>
+            <p>アプリの最新情報の発信と、ご連絡の受付に使用しています。</p>
+            <a class="btn btn-ghost" href={xUrl} target="_blank" rel="noopener">X を開く</a>
+          </li>
+        )}
+        {site.contactEmail && (
+          <li>
+            <h2>メール</h2>
+            <p>内容によっては返信にお時間をいただく場合があります。</p>
+            <a class="btn btn-ghost" href={`mailto:${site.contactEmail}`}>{site.contactEmail}</a>
+          </li>
+        )}
+        {!xUrl && !site.contactEmail && (
+          <li>
+            <h2>準備中</h2>
+            <p>お問い合わせ窓口は現在準備中です。公開までしばらくお待ちください。</p>
+          </li>
+        )}
+      </ul>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .narrow { max-width: 720px; }
+  .lead { color: var(--text-muted); margin: 16px 0 32px; }
+
+  .list { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; }
+
+  .list li {
+    padding: 22px;
+    border-radius: var(--radius);
+    border: 1px solid var(--line);
+    background: var(--surface);
+    box-shadow: var(--shadow-card);
+  }
+
+  .list h2 { font-size: 17px; font-weight: 700; }
+  .list p { color: var(--text-muted); font-size: 14px; margin: 8px 0 16px; }
+</style>

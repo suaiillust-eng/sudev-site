@@ -1,0 +1,114 @@
+---
+import type { App } from '../data/apps';
+import AppIcon from './AppIcon.astro';
+import { withBase } from '../lib/url';
+
+interface Props {
+  app: App;
+  /** スクリーンショットが無いときのフォールバックを大きめに描く */
+  size?: 'lg' | 'md';
+  /** 並べるスクリーンショットの枚数（詳細ページのヒーローは1枚） */
+  max?: number;
+}
+const { app, size = 'lg', max = 3 } = Astro.props;
+const shots = app.screenshots.slice(0, max);
+---
+
+<div class:list={['visual', size]} style={`--app-accent:${app.accent}`}>
+  {
+    shots.length > 0 ? (
+      <div class="shots" data-count={shots.length}>
+        {shots.map((s, i) => (
+          <div class:list={['phone', i === 0 && 'lead']}>
+            <img src={withBase(s.src)} alt={s.alt} loading="lazy" decoding="async" />
+          </div>
+        ))}
+      </div>
+    ) : (
+      <div class="fallback">
+        <AppIcon app={app} size={132} decorative />
+        <p class="fallback-name">{app.name}</p>
+        <p class="fallback-note">スクリーンショット準備中</p>
+      </div>
+    )
+  }
+</div>
+
+<style>
+  .visual {
+    position: relative;
+    border-radius: var(--radius-lg);
+    background:
+      radial-gradient(120% 90% at 50% 0%,
+        color-mix(in srgb, var(--app-accent) var(--tint-strong-amt), transparent), transparent 70%),
+      var(--surface-2);
+    border: 1px solid var(--line);
+    overflow: hidden;
+    display: grid;
+    place-items: center;
+    padding: clamp(22px, 5vw, 34px);
+    min-height: 240px;
+  }
+
+  .visual.lg { min-height: clamp(260px, 46vw, 360px); }
+
+  .shots {
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    gap: clamp(8px, 2vw, 16px);
+    width: 100%;
+  }
+
+  .phone {
+    flex: 0 1 auto;
+    max-width: 168px;
+    border-radius: 22px;
+    border: 1px solid var(--line);
+    background: var(--media-bg);
+    overflow: hidden;
+    box-shadow: var(--shadow-phone);
+  }
+
+  .phone.lead { max-width: 196px; }
+
+  /* 1枚だけのときは大きく見せる。横画面のスクリーンショットもここで収まる */
+  .shots[data-count='1'] .phone { max-width: min(300px, 100%); }
+
+  .phone img { width: 100%; height: auto; }
+
+  .fallback { text-align: center; }
+
+  .fallback-name {
+    margin: 16px 0 0;
+    font-weight: 700;
+    font-size: 17px;
+  }
+
+  .fallback-note {
+    margin: 2px 0 0;
+    font-size: 12px;
+    color: var(--text-dim);
+  }
+
+  /* スマホでは小さく並べずに、横スクロールで1枚ずつ大きく見せる */
+  @media (max-width: 560px) {
+    .shots {
+      justify-content: flex-start;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+      padding-bottom: 4px;
+    }
+
+    .phone,
+    .phone.lead {
+      flex: 0 0 auto;
+      width: 152px;
+      max-width: none;
+      scroll-snap-align: center;
+    }
+
+    .shots[data-count='1'] .phone { width: min(240px, 100%); }
+  }
+</style>
