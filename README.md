@@ -108,14 +108,14 @@ export const featuredApps = ['data-jong', 'my-meshi', 'lexlinka'];
 `src/layouts/Base.astro` 末尾のスクリプトが、ページ閲覧・クリックを Cloudflare Worker
 （`sudev-site-analytics`、管制室の「HP閲覧数」に表示）へ送っている。
 
-- **本番URLを開いて確認するときは、必ず `?meonly=1` を付けて開くこと。**
+- **すーさんが普段使うブラウザでは、最初に1回だけ `?meonly=1` を付けて開けばよい。**
   例: `https://suaiillust-eng.github.io/sudev-site/?meonly=1`
   一度開くとそのブラウザに `localStorage: su-owner=1` が付き、以降そのブラウザからの
-  アクセスは自動で計測対象から外れる（URLにパラメータを付け続ける必要はない）。
-- **ブラウザ・プロファイルが変わると除外フラグは引き継がれない。** Claude Code の
-  ブラウザ操作（Claude in Chrome）は毎回新しいタブ/プロファイルで始まることがあるため、
-  本番HPを開いて確認する作業のたびに `?meonly=1` を付け直すこと。忘れると閲覧数が
-  実際の訪問者数より多く見えてしまう。
+  アクセスは（パラメータなしでも）自動で計測対象から外れ続ける。ブラウザ・端末を
+  変えた場合や、サイトデータを消した場合は、その環境でもう一度だけ開き直す。
+- **Claude（Claude in Chrome でのブラウザ操作）はこの限りではない。** セッションご
+  とに新しいプロファイルで始まりフラグが引き継がれないため、Claude が本番HPを開い
+  て確認する作業をするときは毎回 `?meonly=1` を付け直すこと（Claude自身への注意）。
 - **ローカル（`npm run dev` / `npm run preview`）は計測されない**（`localhost` /
   `127.0.0.1` はスクリプト側で自動除外済み）。
 - 計測データをリセットしたい場合は `~/sudev-site-analytics` の KV（namespace id
