@@ -103,6 +103,26 @@ export const featuredApps = ['data-jong', 'my-meshi', 'lexlinka'];
 アプリごとのアクセント（`--app-accent`）から派生する色も `--accent-text` などの
 トークン経由なので、テーマを変えても明るさが自動で合う。
 
+## アクセス計測（自分の閲覧は必ず除外する）
+
+`src/layouts/Base.astro` 末尾のスクリプトが、ページ閲覧・クリックを Cloudflare Worker
+（`sudev-site-analytics`、管制室の「HP閲覧数」に表示）へ送っている。
+
+- **本番URLを開いて確認するときは、必ず `?meonly=1` を付けて開くこと。**
+  例: `https://suaiillust-eng.github.io/sudev-site/?meonly=1`
+  一度開くとそのブラウザに `localStorage: su-owner=1` が付き、以降そのブラウザからの
+  アクセスは自動で計測対象から外れる（URLにパラメータを付け続ける必要はない）。
+- **ブラウザ・プロファイルが変わると除外フラグは引き継がれない。** Claude Code の
+  ブラウザ操作（Claude in Chrome）は毎回新しいタブ/プロファイルで始まることがあるため、
+  本番HPを開いて確認する作業のたびに `?meonly=1` を付け直すこと。忘れると閲覧数が
+  実際の訪問者数より多く見えてしまう。
+- **ローカル（`npm run dev` / `npm run preview`）は計測されない**（`localhost` /
+  `127.0.0.1` はスクリプト側で自動除外済み）。
+- 計測データをリセットしたい場合は `~/sudev-site-analytics` の KV（namespace id
+  `e805451691844e119ddd13f3fa5f16d0`）から `pv:*` / `siteday:*` / `sitetotal` の
+  キーを削除する（`req:*` は「ご要望」データなので消さないこと）。管制室側の
+  `stats/hp` ドキュメントも合わせて更新が必要。
+
 ## 公開（GitHub Pages）
 
 1. GitHub に新しいリポジトリを作り、この中身を push する
