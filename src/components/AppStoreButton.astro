@@ -2,9 +2,10 @@
 interface Props {
   href: string;
   appName: string;
+  slug: string;
   variant?: 'solid' | 'ghost';
 }
-const { href, appName, variant = 'solid' } = Astro.props;
+const { href, appName, slug, variant = 'solid' } = Astro.props;
 ---
 
 {
@@ -14,6 +15,7 @@ const { href, appName, variant = 'solid' } = Astro.props;
       href={href}
       target="_blank"
       rel="noopener"
+      data-track-slug={slug}
       aria-label={`${appName} を App Store で見る`}
     >
       <svg viewBox="0 0 384 512" width="15" height="15" aria-hidden="true" fill="currentColor">

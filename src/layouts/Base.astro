@@ -62,11 +62,31 @@ const ogUrl = new URL(withBase(ogImage), Astro.site ?? site.url).toString();
           }
           if (localStorage.getItem('su-owner') === '1') return;
         } catch (e) {}
-        var s = document.createElement('script');
-        s.defer = true;
-        s.src = 'https://static.cloudflareinsights.com/beacon.min.js';
-        s.setAttribute('data-cf-beacon', '{"token": "1842c0a47b7443a1b505f4cc7f062987"}');
-        document.body.appendChild(s);
+        fetch('https://sudev-site-analytics.tabiato.workers.dev/track', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ type: 'pageview', path: location.pathname }),
+          keepalive: true,
+        }).catch(function () {});
+
+        document.addEventListener('click', function (e) {
+          var el = e.target.closest('[data-track-slug]');
+          if (!el) return;
+          var payload = JSON.stringify({ type: 'click', slug: el.getAttribute('data-track-slug') });
+          if (navigator.sendBeacon) {
+            navigator.sendBeacon(
+              'https://sudev-site-analytics.tabiato.workers.dev/track',
+              new Blob([payload], { type: 'application/json' })
+            );
+          } else {
+            fetch('https://sudev-site-analytics.tabiato.workers.dev/track', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: payload,
+              keepalive: true,
+            }).catch(function () {});
+          }
+        });
       })();
     </script>
   </body>

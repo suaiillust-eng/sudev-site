@@ -33,7 +33,7 @@ const { app, lead = false, index } = Astro.props;
 
     <div class="actions">
       <a class="btn btn-ghost" href={withBase(`/apps/${app.slug}`)}>詳しく見る</a>
-      <AppStoreButton href={app.appStoreUrl} appName={app.name} />
+      <AppStoreButton href={app.appStoreUrl} appName={app.name} slug={app.slug} />
     </div>
   </div>
 
