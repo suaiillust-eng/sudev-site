@@ -1,0 +1,198 @@
+---
+import { apps } from '../data/apps';
+import { withBase } from '../lib/url';
+
+interface Props {
+  /** true のとき見出し・説明文を省略し、フォームだけ出す（トップページ埋め込み用） */
+  compact?: boolean;
+}
+const { compact = false } = Astro.props;
+---
+
+<div class="request-form-wrap">
+  {!compact && (
+    <>
+      <p class="eyebrow">Feature Request</p>
+      <h2 class="section-title">機能のご要望</h2>
+    </>
+  )}
+  <p class="lead">
+    アプリに追加してほしい機能があれば、気軽に送ってください。<strong>メールもアカウント登録も不要</strong>、その場ですぐ送れます。
+  </p>
+
+  <form id="request-form" class="form">
+    <label id="app-picker-label">対象アプリ</label>
+    <div class="app-picker" role="radiogroup" aria-labelledby="app-picker-label">
+      {apps.map((a) => (
+        <label class="app-option">
+          <input type="radio" name="app" value={a.slug} required />
+          <img src={withBase(a.icon)} alt="" width="28" height="28" loading="lazy" decoding="async" />
+          <span>{a.name}</span>
+        </label>
+      ))}
+    </div>
+
+    <label for="message">ご要望の内容</label>
+    <textarea
+      id="message"
+      name="message"
+      rows="5"
+      maxlength="1000"
+      required
+      placeholder="どんな機能が欲しいか、できるだけ具体的に教えてください。"
+    ></textarea>
+
+    <input type="text" name="hp" id="hp" class="hp-field" tabindex="-1" autocomplete="off" />
+
+    <button type="submit" class="btn btn-store">送信する</button>
+    <p id="form-msg" class="form-msg" role="status"></p>
+    <p class="form-note">※ いただいたご要望は参考にさせていただきますが、内容によっては実装をお約束できない場合があります。</p>
+  </form>
+</div>
+
+<style>
+  .request-form-wrap { max-width: 640px; }
+  .lead { color: var(--text-muted); margin: 16px 0 28px; }
+  .lead strong { color: var(--text); }
+
+  .form { display: grid; gap: 8px; }
+
+  .form > label {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-muted);
+    margin-top: 14px;
+  }
+
+  .app-picker {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .app-option {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 14px 8px 10px;
+    border-radius: 999px;
+    border: 1px solid var(--line-strong);
+    background: var(--chip-bg);
+    cursor: pointer;
+    font-size: 13.5px;
+    font-weight: 600;
+    transition: border-color 0.16s ease, background-color 0.16s ease;
+  }
+  .app-option:hover { background: var(--chip-bg-hover); }
+
+  .app-option input {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    margin: 0;
+    cursor: pointer;
+  }
+
+  .app-option img {
+    width: 28px;
+    height: 28px;
+    border-radius: 23%;
+    background: var(--icon-bg);
+  }
+
+  .app-option:has(input:checked) {
+    border-color: var(--accent);
+    background: color-mix(in srgb, var(--accent) 16%, var(--chip-bg));
+  }
+
+  .app-option:has(input:focus-visible) {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  .form textarea {
+    font: inherit;
+    font-size: 15px;
+    padding: 12px 14px;
+    border-radius: var(--radius);
+    border: 1px solid var(--line-strong);
+    background: var(--chip-bg);
+    color: var(--text);
+    resize: vertical;
+  }
+
+  .form textarea:focus {
+    outline: 2px solid var(--accent);
+    outline-offset: 1px;
+  }
+
+  .hp-field {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+  }
+
+  .btn {
+    margin-top: 20px;
+    justify-self: start;
+    border: none;
+    cursor: pointer;
+  }
+
+  .form-msg {
+    font-size: 13.5px;
+    margin: 10px 0 0;
+    min-height: 1.2em;
+  }
+  .form-msg.ok { color: var(--accent); }
+  .form-msg.err { color: #e5605a; }
+
+  .form-note {
+    font-size: 12px;
+    color: var(--text-dim);
+    margin: 6px 0 0;
+  }
+</style>
+
+<script>
+  const forms = document.querySelectorAll<HTMLFormElement>('.request-form-wrap form');
+
+  forms.forEach((form) => {
+    const msg = form.querySelector('.form-msg') as HTMLParagraphElement;
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const appInput = form.querySelector<HTMLInputElement>('input[name="app"]:checked');
+      const message = (form.querySelector('textarea[name="message"]') as HTMLTextAreaElement).value.trim();
+      const hp = (form.querySelector('input[name="hp"]') as HTMLInputElement).value;
+      if (!appInput || !message) return;
+
+      const btn = form.querySelector('button[type="submit"]') as HTMLButtonElement;
+      btn.disabled = true;
+      msg.textContent = '送信中…';
+      msg.className = 'form-msg';
+
+      fetch('https://sudev-site-analytics.tabiato.workers.dev/request', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ app: appInput.value, message, hp }),
+      })
+        .then((r) => {
+          if (!r.ok) throw new Error();
+          msg.textContent = '送信しました。ありがとうございます！';
+          msg.className = 'form-msg ok';
+          form.reset();
+        })
+        .catch(() => {
+          msg.textContent = '送信に失敗しました。時間をおいて再度お試しください。';
+          msg.className = 'form-msg err';
+        })
+        .finally(() => {
+          btn.disabled = false;
+        });
+    });
+  });
+</script>
