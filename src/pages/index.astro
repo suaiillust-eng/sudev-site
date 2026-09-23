@@ -14,10 +14,10 @@ const releasedCount = releasedApps().length;
 <Base title={site.name} description={site.description} path="/">
   <section class="hero">
     <div class="container">
-      <p class="hero-eyebrow">Apps made by SUdev</p>
-      <h1 class="hero-title">SUdev</h1>
+      <p class="hero-eyebrow">Projects by SULab</p>
+      <h1 class="hero-title">SULab</h1>
       <p class="hero-lead">
-        個人開発でアプリをつくっています。<br />
+        AIを活用しながら、個人でアプリや動画などをつくっています。<br />
         麻雀のデータ管理からペットのアルバムまで、{releasedCount}本のアプリを公開しています。
       </p>
       <div class="hero-actions">
@@ -53,7 +53,7 @@ const releasedCount = releasedApps().length;
         <div class="section-head">
           <p class="eyebrow">All Apps</p>
           <h2 class="section-title">そのほかのアプリ</h2>
-          <p class="section-note">SUdev がこれまでにリリースした全{releasedCount}本のうち、Featured 以外の{others.length}本です。</p>
+          <p class="section-note">SULab がこれまでにリリースした全{releasedCount}本のうち、Featured 以外の{others.length}本です。</p>
         </div>
         <div class="grid">
           {others.map((app) => <AppCard app={app} />)}
@@ -96,9 +96,9 @@ const releasedCount = releasedApps().length;
   <section class="section section-alt" id="about">
     <div class="container about">
       <p class="eyebrow">About</p>
-      <h2 class="section-title">SUdev について</h2>
+      <h2 class="section-title">SULab について</h2>
       <p class="about-text">
-        SUdev は個人開発でアプリを制作しています。<br />
+        SULab は個人でAIを活用したものづくりをしています。アプリ開発に加えて、動画制作など活動の幅を広げています。<br />
         日々使うものを、自分が欲しい形でつくっています。
       </p>
       <a class="btn btn-ghost" href={withBase('/contact')}>お問い合わせ</a>

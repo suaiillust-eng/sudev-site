@@ -1,6 +1,6 @@
-# SUdev 公式サイト
+# SULab 公式サイト
 
-SUdev がつくっているアプリを紹介する公式サイト。Astro + 静的書き出し。
+SULab がつくっているアプリを紹介する公式サイト。Astro + 静的書き出し。
 
 ```bash
 npm install

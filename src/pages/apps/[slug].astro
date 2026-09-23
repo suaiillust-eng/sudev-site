@@ -27,7 +27,7 @@ const related = apps.filter((a) => a.slug !== app.slug).slice(0, 3);
   <article>
     <section class="head" style={`--app-accent:${app.accent}`}>
       <div class="container">
-        <a class="back" href={withBase('/#featured')}>← SUdev のアプリ一覧</a>
+        <a class="back" href={withBase('/#featured')}>← SULab のアプリ一覧</a>
         <div class="head-grid">
           <div>
             <div class="title-row">
@@ -106,7 +106,7 @@ const related = apps.filter((a) => a.slug !== app.slug).slice(0, 3);
       <div class="container">
         <div class="section-head">
           <p class="eyebrow">Other Apps</p>
-          <h2 class="section-title">SUdev の他のアプリ</h2>
+          <h2 class="section-title">SULab の他のアプリ</h2>
         </div>
         <div class="grid">
           {related.map((a) => <AppCard app={a} />)}
