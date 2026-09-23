@@ -1,6 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import { site, xUrl } from '../data/site';
+import { withBase } from '../lib/url';
 ---
 
 <Base
@@ -17,6 +18,11 @@ import { site, xUrl } from '../data/site';
       </p>
 
       <ul class="list">
+        <li>
+          <h2>機能のご要望</h2>
+          <p>アプリに追加してほしい機能は、専用フォームから送れます。</p>
+          <a class="btn btn-ghost" href={withBase('/request')}>要望フォームを開く</a>
+        </li>
         {xUrl && (
           <li>
             <h2>X</h2>

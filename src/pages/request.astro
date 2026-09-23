@@ -1,0 +1,138 @@
+---
+import Base from '../layouts/Base.astro';
+import { apps } from '../data/apps';
+---
+
+<Base
+  title="要望"
+  description="SULab のアプリに追加してほしい機能をお寄せください。"
+  path="/request"
+>
+  <section class="section">
+    <div class="container narrow">
+      <p class="eyebrow">Feature Request</p>
+      <h1 class="section-title">機能のご要望</h1>
+      <p class="lead">
+        アプリに追加してほしい機能があれば、気軽に送ってください。メールやアカウント登録は不要です。
+      </p>
+
+      <form id="request-form" class="form">
+        <label for="app">対象アプリ（任意）</label>
+        <select id="app" name="app">
+          <option value="">指定しない</option>
+          {apps.map((a) => <option value={a.slug}>{a.name}</option>)}
+        </select>
+
+        <label for="message">ご要望の内容</label>
+        <textarea
+          id="message"
+          name="message"
+          rows="6"
+          maxlength="1000"
+          required
+          placeholder="どんな機能が欲しいか、できるだけ具体的に教えてください。"
+        ></textarea>
+
+        <input type="text" name="hp" id="hp" class="hp-field" tabindex="-1" autocomplete="off" />
+
+        <button type="submit" class="btn btn-store">送信する</button>
+        <p id="form-msg" class="form-msg" role="status"></p>
+      </form>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .narrow { max-width: 640px; }
+  .lead { color: var(--text-muted); margin: 16px 0 32px; }
+
+  .form {
+    display: grid;
+    gap: 8px;
+  }
+
+  .form label {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-muted);
+    margin-top: 14px;
+  }
+
+  .form select,
+  .form textarea {
+    font: inherit;
+    font-size: 15px;
+    padding: 12px 14px;
+    border-radius: var(--radius);
+    border: 1px solid var(--line-strong);
+    background: var(--chip-bg);
+    color: var(--text);
+    resize: vertical;
+  }
+
+  .form select:focus,
+  .form textarea:focus {
+    outline: 2px solid var(--accent);
+    outline-offset: 1px;
+  }
+
+  .hp-field {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+  }
+
+  .btn {
+    margin-top: 20px;
+    justify-self: start;
+    border: none;
+    cursor: pointer;
+  }
+
+  .form-msg {
+    font-size: 13.5px;
+    margin: 10px 0 0;
+    min-height: 1.2em;
+  }
+  .form-msg.ok { color: var(--accent); }
+  .form-msg.err { color: #e5605a; }
+</style>
+
+<script>
+  const form = document.getElementById('request-form') as HTMLFormElement;
+  const msg = document.getElementById('form-msg') as HTMLParagraphElement;
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const app = (document.getElementById('app') as HTMLSelectElement).value;
+    const message = (document.getElementById('message') as HTMLTextAreaElement).value.trim();
+    const hp = (document.getElementById('hp') as HTMLInputElement).value;
+    if (!message) return;
+
+    const btn = form.querySelector('button[type="submit"]') as HTMLButtonElement;
+    btn.disabled = true;
+    msg.textContent = '送信中…';
+    msg.className = 'form-msg';
+
+    fetch('https://sudev-site-analytics.tabiato.workers.dev/request', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ app, message, hp }),
+    })
+      .then((r) => {
+        if (!r.ok) throw new Error();
+        msg.textContent = '送信しました。ありがとうございます！';
+        msg.className = 'form-msg ok';
+        form.reset();
+      })
+      .catch(() => {
+        msg.textContent = '送信に失敗しました。時間をおいて再度お試しください。';
+        msg.className = 'form-msg err';
+      })
+      .finally(() => {
+        btn.disabled = false;
+      });
+  });
+</script>
