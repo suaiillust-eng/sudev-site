@@ -3,13 +3,15 @@ import { apps } from '../data/apps';
 import { withBase } from '../lib/url';
 
 interface Props {
-  /** true のとき見出し・説明文を省略し、フォームだけ出す（トップページ埋め込み用） */
+  /** true のとき見出し・説明文を省略し、フォームだけ出す */
   compact?: boolean;
+  /** true のとき、Xセクションなどと同じ枠付きカードでフル幅表示する（トップページ埋め込み用） */
+  card?: boolean;
 }
-const { compact = false } = Astro.props;
+const { compact = false, card = false } = Astro.props;
 ---
 
-<div class="request-form-wrap">
+<div class:list={['request-form-wrap', card && 'is-card']}>
   {!compact && (
     <>
       <p class="eyebrow">Feature Request</p>
@@ -52,6 +54,19 @@ const { compact = false } = Astro.props;
 
 <style>
   .request-form-wrap { max-width: 640px; }
+
+  .request-form-wrap.is-card {
+    max-width: none;
+    padding: clamp(22px, 5vw, 36px);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--line);
+    background: var(--surface);
+    box-shadow: var(--shadow-card);
+  }
+
+  .request-form-wrap.is-card .form {
+    max-width: 640px;
+  }
   .lead { color: var(--text-muted); margin: 16px 0 28px; }
   .lead strong { color: var(--text); }
 
