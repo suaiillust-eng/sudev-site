@@ -56,6 +56,8 @@ const ogUrl = new URL(withBase(ogImage), Astro.site ?? site.url).toString();
       // 一度だけ ?meonly=1 を付けて開くと、このブラウザには目印が残り、
       // 以降そのブラウザからのアクセスは計測しない（ブラウザ単位・端末単位）。
       (function () {
+        // ローカル確認（astro dev / astro preview）は誰も見ていないテスト用アクセスなので計測しない。
+        if (/^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname)) return;
         try {
           if (new URLSearchParams(location.search).get('meonly') === '1') {
             localStorage.setItem('su-owner', '1');
