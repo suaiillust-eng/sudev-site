@@ -2,6 +2,7 @@
 import Base from '../layouts/Base.astro';
 import FeaturedApp from '../components/FeaturedApp.astro';
 import AppCard from '../components/AppCard.astro';
+import NoticeBoard from '../components/NoticeBoard.astro';
 import { apps, featured, otherReleased, releasedApps } from '../data/apps';
 import { site, xUrl } from '../data/site';
 import { withBase } from '../lib/url';
@@ -13,24 +14,27 @@ const releasedCount = releasedApps().length;
 
 <Base title={site.name} description={site.description} path="/">
   <section class="hero">
-    <div class="container">
-      <p class="hero-eyebrow">Projects by SULab</p>
-      <h1 class="hero-title">SULab</h1>
-      <p class="hero-lead">
-        AIを活用しながら、個人でアプリや動画などをつくっています。<br />
-        麻雀のデータ管理からペットのアルバムまで、{releasedCount}本のアプリを公開しています。
-      </p>
-      <div class="hero-actions">
-        <a class="btn btn-store" href="#featured">アプリを見る</a>
-        {xUrl && (
-          <a class="btn btn-ghost" href={xUrl} target="_blank" rel="noopener">X をフォロー</a>
-        )}
+    <div class="container hero-grid">
+      <div class="hero-main">
+        <p class="hero-eyebrow">Projects by SULab</p>
+        <h1 class="hero-title">SULab</h1>
+        <p class="hero-lead">
+          AIを活用しながら、個人でアプリや動画などをつくっています。<br />
+          麻雀のデータ管理からペットのアルバムまで、{releasedCount}本のアプリを公開しています。
+        </p>
+        <div class="hero-actions">
+          <a class="btn btn-store" href="#featured">アプリを見る</a>
+          {xUrl && (
+            <a class="btn btn-ghost" href={xUrl} target="_blank" rel="noopener">X をフォロー</a>
+          )}
+        </div>
+        <ul class="hero-icons" aria-hidden="true">
+          {apps.filter((a) => a.icon).map((a) => (
+            <li><img class="icon-img" src={withBase(a.icon)} alt="" width="40" height="40" decoding="async" /></li>
+          ))}
+        </ul>
       </div>
-      <ul class="hero-icons" aria-hidden="true">
-        {apps.filter((a) => a.icon).map((a) => (
-          <li><img class="icon-img" src={withBase(a.icon)} alt="" width="40" height="40" decoding="async" /></li>
-        ))}
-      </ul>
+      <NoticeBoard />
     </div>
   </section>
 
@@ -125,6 +129,19 @@ const releasedCount = releasedApps().length;
   }
 
   .hero > .container { position: relative; }
+
+  .hero-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: clamp(32px, 6vw, 56px);
+    align-items: start;
+  }
+
+  @media (min-width: 860px) {
+    .hero-grid {
+      grid-template-columns: minmax(0, 1.5fr) minmax(280px, 340px);
+    }
+  }
 
   .hero-eyebrow {
     font-size: 12.5px;

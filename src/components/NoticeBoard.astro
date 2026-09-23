@@ -1,0 +1,99 @@
+---
+import { notices, statusLabel } from '../data/notices';
+
+const items = notices.slice(0, 5);
+
+function badgeClass(status: (typeof notices)[number]['status']) {
+  if (status === 'progress') return 'badge badge-dev';
+  if (status === 'released') return 'badge badge-notice';
+  return 'badge';
+}
+
+function fmtDate(d: string) {
+  const [, m, day] = d.split('-');
+  return `${Number(m)}/${Number(day)}`;
+}
+---
+
+<aside class="notice-board" aria-label="お知らせ">
+  <p class="eyebrow">Notice</p>
+  <h2 class="notice-title">お知らせ</h2>
+  {items.length === 0 ? (
+    <p class="notice-empty">現在お知らせはありません。</p>
+  ) : (
+    <ul class="notice-list">
+      {items.map((n) => (
+        <li>
+          <div class="notice-head">
+            <span class={badgeClass(n.status)}>{statusLabel[n.status]}</span>
+            <time class="notice-date">{fmtDate(n.date)}</time>
+          </div>
+          <p class="notice-item-title">{n.title}</p>
+          {n.body && <p class="notice-body">{n.body}</p>}
+        </li>
+      ))}
+    </ul>
+  )}
+</aside>
+
+<style>
+  .notice-board {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-card);
+    padding: clamp(20px, 3vw, 26px);
+  }
+
+  .notice-title {
+    font-size: 18px;
+    font-weight: 800;
+    margin: 0 0 16px;
+  }
+
+  .notice-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 16px;
+  }
+
+  .notice-list li + li {
+    padding-top: 16px;
+    border-top: 1px solid var(--line);
+  }
+
+  .notice-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 6px;
+  }
+
+  .notice-date {
+    font-size: 12px;
+    color: var(--text-dim);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .notice-item-title {
+    margin: 0;
+    font-size: 14.5px;
+    font-weight: 700;
+  }
+
+  .notice-body {
+    margin: 6px 0 0;
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.7;
+  }
+
+  .notice-empty {
+    margin: 0;
+    font-size: 14px;
+    color: var(--text-muted);
+  }
+</style>
