@@ -7,9 +7,18 @@ export interface Notice {
   status: 'progress' | 'planned' | 'released';
   title: string;
   body?: string;
+  /** src/data/apps.ts の slug。指定するとアプリアイコンを添えて表示する。 */
+  appSlug?: string;
 }
 
 export const notices: Notice[] = [
+  {
+    date: '2026-09-23',
+    status: 'planned',
+    title: '旅跡に共有機能を追加予定',
+    body: '訪れた場所の記録を、他の人と共有できるようにする機能を計画しています。',
+    appSlug: 'tabiato',
+  },
   {
     date: '2026-09-23',
     status: 'released',

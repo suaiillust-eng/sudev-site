@@ -1,7 +1,13 @@
 ---
 import { notices, statusLabel } from '../data/notices';
+import { apps } from '../data/apps';
+import { withBase } from '../lib/url';
 
 const items = notices;
+
+function appOf(slug?: string) {
+  return slug ? apps.find((a) => a.slug === slug) : undefined;
+}
 
 function badgeClass(status: (typeof notices)[number]['status']) {
   if (status === 'progress') return 'badge badge-dev';
@@ -22,16 +28,34 @@ function fmtDate(d: string) {
     <p class="notice-empty">現在お知らせはありません。</p>
   ) : (
     <ul class="notice-list">
-      {items.map((n) => (
-        <li>
-          <div class="notice-head">
-            <span class={badgeClass(n.status)}>{statusLabel[n.status]}</span>
-            <time class="notice-date">{fmtDate(n.date)}</time>
-          </div>
-          <p class="notice-item-title">{n.title}</p>
-          {n.body && <p class="notice-body">{n.body}</p>}
-        </li>
-      ))}
+      {items.map((n) => {
+        const app = appOf(n.appSlug);
+        return (
+          <li>
+            <div class="notice-head">
+              <span class={badgeClass(n.status)}>{statusLabel[n.status]}</span>
+              <time class="notice-date">{fmtDate(n.date)}</time>
+            </div>
+            <div class="notice-item-row">
+              {app && (
+                <img
+                  class="notice-icon"
+                  src={withBase(app.icon)}
+                  alt=""
+                  width="32"
+                  height="32"
+                  loading="lazy"
+                  decoding="async"
+                />
+              )}
+              <div>
+                <p class="notice-item-title">{n.title}</p>
+                {n.body && <p class="notice-body">{n.body}</p>}
+              </div>
+            </div>
+          </li>
+        );
+      })}
     </ul>
   )}
 </aside>
@@ -87,6 +111,19 @@ function fmtDate(d: string) {
     font-size: 12px;
     color: var(--text-dim);
     font-variant-numeric: tabular-nums;
+  }
+
+  .notice-item-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .notice-icon {
+    flex: none;
+    border-radius: 23%;
+    background: var(--icon-bg);
+    box-shadow: var(--shadow-icon);
   }
 
   .notice-item-title {
