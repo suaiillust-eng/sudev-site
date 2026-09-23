@@ -1,7 +1,7 @@
 ---
 import { notices, statusLabel } from '../data/notices';
 
-const items = notices.slice(0, 5);
+const items = notices;
 
 function badgeClass(status: (typeof notices)[number]['status']) {
   if (status === 'progress') return 'badge badge-dev';
@@ -54,10 +54,21 @@ function fmtDate(d: string) {
   .notice-list {
     list-style: none;
     margin: 0;
-    padding: 0;
+    padding: 0 4px 0 0;
     display: grid;
     gap: 16px;
+    max-height: 360px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--line-strong) transparent;
   }
+
+  .notice-list::-webkit-scrollbar { width: 6px; }
+  .notice-list::-webkit-scrollbar-thumb {
+    background: var(--line-strong);
+    border-radius: 999px;
+  }
+  .notice-list::-webkit-scrollbar-track { background: transparent; }
 
   .notice-list li + li {
     padding-top: 16px;
