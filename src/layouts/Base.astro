@@ -51,5 +51,23 @@ const ogUrl = new URL(withBase(ogImage), Astro.site ?? site.url).toString();
       <slot />
     </main>
     <Footer />
+    <script is:inline>
+      // 自分のアクセスは計測対象から外す。
+      // 一度だけ ?meonly=1 を付けて開くと、このブラウザには目印が残り、
+      // 以降そのブラウザからのアクセスは計測しない（ブラウザ単位・端末単位）。
+      (function () {
+        try {
+          if (new URLSearchParams(location.search).get('meonly') === '1') {
+            localStorage.setItem('su-owner', '1');
+          }
+          if (localStorage.getItem('su-owner') === '1') return;
+        } catch (e) {}
+        var s = document.createElement('script');
+        s.defer = true;
+        s.src = 'https://static.cloudflareinsights.com/beacon.min.js';
+        s.setAttribute('data-cf-beacon', '{"token": "1842c0a47b7443a1b505f4cc7f062987"}');
+        document.body.appendChild(s);
+      })();
+    </script>
   </body>
 </html>
