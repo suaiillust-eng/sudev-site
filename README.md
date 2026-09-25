@@ -123,6 +123,15 @@ export const featuredApps = ['data-jong', 'my-meshi', 'lexlinka'];
   キーを削除する（`req:*` は「ご要望」データなので消さないこと）。管制室側の
   `stats/hp` ドキュメントも合わせて更新が必要。
 
+## ご要望（要望フォーム）の受信
+
+HP の要望フォームと、アプリ内の要望フォーム（旅跡など）は、どちらも `sudev-site-analytics` の
+`POST /request` に `{ app, message }` を送る。受信した要望は KV の `req:*` に入る。
+
+- 一覧 `GET /requests` と削除 `DELETE /requests/<id>` は **`?token=<SYNC_TOKEN>` が必須**
+  （2026-09-24 から。誰でも読めて消せる状態だったため）。管制室の「ご要望」へ同期する
+  ときもこのトークンを付けること。
+
 ## 公開（GitHub Pages）
 
 1. GitHub に新しいリポジトリを作り、この中身を push する
