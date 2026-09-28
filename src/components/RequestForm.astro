@@ -1,5 +1,5 @@
 ---
-import { apps } from '../data/apps';
+import { apps, type App } from '../data/apps';
 import { withBase } from '../lib/url';
 
 interface Props {
@@ -7,8 +7,13 @@ interface Props {
   compact?: boolean;
   /** true のとき、Xセクションなどと同じ枠付きカードでフル幅表示する（トップページ埋め込み用） */
   card?: boolean;
+  /**
+   * 対象アプリを固定する（アプリ個別ページ用）。
+   * 指定すると選択肢を出さず、そのアプリからの要望として送る。
+   */
+  app?: App;
 }
-const { compact = false, card = false } = Astro.props;
+const { compact = false, card = false, app } = Astro.props;
 ---
 
 <div class:list={['request-form-wrap', card && 'is-card']}>
@@ -22,17 +27,32 @@ const { compact = false, card = false } = Astro.props;
     アプリに追加してほしい機能があれば、気軽に送ってください。<strong>メールもアカウント登録も不要</strong>、その場ですぐ送れます。
   </p>
 
-  <form id="request-form" class="form">
-    <label id="app-picker-label">対象アプリ</label>
-    <div class="app-picker" role="radiogroup" aria-labelledby="app-picker-label">
-      {apps.map((a) => (
-        <label class="app-option">
-          <input type="radio" name="app" value={a.slug} required />
-          <img src={withBase(a.icon)} alt="" width="28" height="28" loading="lazy" decoding="async" />
-          <span>{a.name}</span>
-        </label>
-      ))}
-    </div>
+  <form class="form request-form">
+    {app ? (
+      <>
+        <label>対象アプリ</label>
+        <input type="hidden" name="app" value={app.slug} />
+        <div class="app-picker">
+          <span class="app-option is-fixed">
+            <img src={withBase(app.icon)} alt="" width="28" height="28" loading="lazy" decoding="async" />
+            <span>{app.name}</span>
+          </span>
+        </div>
+      </>
+    ) : (
+      <>
+        <label id="app-picker-label">対象アプリ</label>
+        <div class="app-picker" role="radiogroup" aria-labelledby="app-picker-label">
+          {apps.map((a) => (
+            <label class="app-option">
+              <input type="radio" name="app" value={a.slug} required />
+              <img src={withBase(a.icon)} alt="" width="28" height="28" loading="lazy" decoding="async" />
+              <span>{a.name}</span>
+            </label>
+          ))}
+        </div>
+      </>
+    )}
 
     <label for="message">ご要望の内容</label>
     <textarea
@@ -116,10 +136,12 @@ const { compact = false, card = false } = Astro.props;
     background: var(--icon-bg);
   }
 
-  .app-option:has(input:checked) {
+  .app-option:has(input:checked),
+  .app-option.is-fixed {
     border-color: var(--accent);
     background: color-mix(in srgb, var(--accent) 16%, var(--chip-bg));
   }
+  .app-option.is-fixed { cursor: default; }
 
   .app-option:has(input:focus-visible) {
     outline: 2px solid var(--accent);
@@ -180,7 +202,10 @@ const { compact = false, card = false } = Astro.props;
 
     form.addEventListener('submit', (e) => {
       e.preventDefault();
-      const appInput = form.querySelector<HTMLInputElement>('input[name="app"]:checked');
+      // 個別ページでは対象が hidden で固定されている。選択式なら選んだものを読む。
+      const appInput =
+        form.querySelector<HTMLInputElement>('input[name="app"]:checked') ??
+        form.querySelector<HTMLInputElement>('input[name="app"][type="hidden"]');
       const message = (form.querySelector('textarea[name="message"]') as HTMLTextAreaElement).value.trim();
       const hp = (form.querySelector('input[name="hp"]') as HTMLInputElement).value;
       if (!appInput || !message) return;

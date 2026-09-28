@@ -3,6 +3,7 @@ import Base from '../../layouts/Base.astro';
 import AppIcon from '../../components/AppIcon.astro';
 import AppStoreButton from '../../components/AppStoreButton.astro';
 import AppCard from '../../components/AppCard.astro';
+import RequestForm from '../../components/RequestForm.astro';
 import { apps, type App } from '../../data/apps';
 import { withBase } from '../../lib/url';
 
@@ -98,6 +99,18 @@ const related = apps.filter((a) => a.slug !== app.slug).slice(0, 3);
               </figure>
             ))}
           </div>
+        </div>
+      </section>
+    )}
+
+    {!isDev && (
+      <section class="section" id="request">
+        <div class="container">
+          <div class="section-head">
+            <p class="eyebrow">Feature Request</p>
+            <h2 class="section-title">{app.name} への機能のご要望</h2>
+          </div>
+          <RequestForm compact app={app} />
         </div>
       </section>
     )}
