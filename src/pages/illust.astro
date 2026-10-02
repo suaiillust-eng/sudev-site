@@ -1,0 +1,128 @@
+---
+import Base from '../layouts/Base.astro';
+import { illustLinks, illusts } from '../data/illust';
+import { withBase } from '../lib/url';
+
+const links = illustLinks.filter((l) => l.url);
+---
+
+<Base
+  title="アニメイラスト"
+  description="SULab のアニメイラストの活動ページです。Patreon・pixiv へのリンクと作品の一部を掲載しています。"
+  path="/illust"
+>
+  <section class="section">
+    <div class="container">
+      <div class="section-head">
+        <p class="eyebrow">Illustration</p>
+        <h1 class="section-title">アニメイラスト</h1>
+        <p class="lead">
+          アプリ開発とあわせて、アニメ調のイラストも制作しています。<br />
+          作品はPatreonとpixivで公開しています。
+        </p>
+      </div>
+
+      {links.length > 0 && (
+        <ul class="links">
+          {links.map((l) => (
+            <li class={`link link-${l.id}`}>
+              <h2>{l.label}</h2>
+              <p>{l.note}</p>
+              <a class="btn btn-ghost" href={l.url} target="_blank" rel="noopener">{l.label} を開く</a>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  </section>
+
+  {illusts.length > 0 && (
+    <section class="section section-alt" id="gallery">
+      <div class="container">
+        <div class="section-head">
+          <p class="eyebrow">Gallery</p>
+          <h2 class="section-title">作品の一部</h2>
+          <p class="section-note">ほかの作品はPatreonとpixivでご覧いただけます。</p>
+        </div>
+        <ul class="gallery">
+          {illusts.map((it) => (
+            <li>
+              <a href={withBase(`/illust/${it.file}`)} target="_blank" rel="noopener">
+                <img
+                  src={withBase(`/illust/${it.file}`)}
+                  alt={it.title}
+                  width={it.width}
+                  height={it.height}
+                  loading="lazy"
+                  decoding="async"
+                />
+              </a>
+              {it.title && <p class="caption">{it.title}</p>}
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  )}
+</Base>
+
+<style>
+  .lead { color: var(--text-muted); margin: 16px 0 0; max-width: 640px; }
+
+  .links {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 14px;
+  }
+
+  .link {
+    padding: 22px;
+    border-radius: var(--radius);
+    border: 1px solid var(--line);
+    background: var(--surface);
+    box-shadow: var(--shadow-card);
+  }
+
+  .link h2 { font-size: 17px; font-weight: 700; }
+  .link p { color: var(--text-muted); font-size: 14px; margin: 8px 0 16px; }
+
+  .section-alt { background: var(--bg-soft); }
+
+  .gallery {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    columns: 3 260px;
+    column-gap: 14px;
+  }
+
+  .gallery li {
+    break-inside: avoid;
+    margin-bottom: 14px;
+  }
+
+  .gallery a {
+    display: block;
+    border-radius: var(--radius);
+    overflow: hidden;
+    border: 1px solid var(--line);
+    background: var(--surface-2);
+  }
+
+  .gallery img {
+    width: 100%;
+    height: auto;
+    transition: transform 0.3s ease;
+  }
+
+  .gallery a:hover img { transform: scale(1.02); }
+
+  .caption {
+    color: var(--text-muted);
+    font-size: 13px;
+    margin: 8px 2px 0;
+  }
+</style>
