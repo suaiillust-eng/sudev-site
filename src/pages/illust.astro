@@ -26,8 +26,12 @@ const links = illustLinks.filter((l) => l.url);
         <ul class="links">
           {links.map((l) => (
             <li class={`link link-${l.id}`}>
-              <h2>{l.label}</h2>
+              <div class="link-head">
+                <h2>{l.label}</h2>
+                {l.adult && <span class="badge badge-r18">R18</span>}
+              </div>
               <p>{l.note}</p>
+              {l.adult && <p class="adult-note">R18作品を含みます。18歳未満の方は閲覧しないでください。</p>}
               <a class="btn btn-ghost" href={l.url} target="_blank" rel="noopener">{l.label} を開く</a>
             </li>
           ))}
@@ -86,8 +90,17 @@ const links = illustLinks.filter((l) => l.url);
     box-shadow: var(--shadow-card);
   }
 
+  .link-head { display: flex; align-items: center; gap: 10px; }
   .link h2 { font-size: 17px; font-weight: 700; }
   .link p { color: var(--text-muted); font-size: 14px; margin: 8px 0 16px; }
+  .link .adult-note { color: var(--danger-text); font-size: 13px; margin-top: -8px; }
+
+  .badge-r18 {
+    border-color: var(--danger-border);
+    background: var(--danger-bg);
+    color: var(--danger-text);
+    letter-spacing: 0.06em;
+  }
 
   .section-alt { background: var(--bg-soft); }
 

@@ -1,18 +1,21 @@
 /**
  * アニメイラスト関係ページ（/illust）の設定。
  * URL が空のリンクはボタンごと非表示になる。
+ * adult: true のリンクには R18 の目印と年齢の注意書きが付く。
  */
 export const illustLinks = [
   {
     id: 'patreon',
     label: 'Patreon',
     url: 'https://www.patreon.com/c/SU668',
+    adult: true,
     note: '支援者向けにイラストを公開しています。',
   },
   {
     id: 'pixiv',
     label: 'pixiv',
     url: 'https://www.pixiv.net/users/8134355',
+    adult: true,
     note: '作品の一覧はこちらで公開しています。',
   },
 ] as const;

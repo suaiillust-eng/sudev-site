@@ -50,4 +50,8 @@
   --hero-glow-1: rgba(47, 99, 240, 0.09);
   --hero-glow-2: rgba(18, 165, 101, 0.07);
   --hero-title: linear-gradient(120deg, #151a21 25%, #2f63f0 100%);
+
+  --danger-text: #c0392b;
+  --danger-border: rgba(192, 57, 43, 0.4);
+  --danger-bg: rgba(192, 57, 43, 0.07);
 }
