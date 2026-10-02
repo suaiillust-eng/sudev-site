@@ -12,7 +12,7 @@ export const illustLinks = [
   {
     id: 'pixiv',
     label: 'pixiv',
-    url: '',
+    url: 'https://www.pixiv.net/users/8134355',
     note: '作品の一覧はこちらで公開しています。',
   },
 ] as const;
