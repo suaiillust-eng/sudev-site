@@ -13,10 +13,17 @@ export interface Notice {
 
 export const notices: Notice[] = [
   {
+    date: '2026-10-02',
+    status: 'released',
+    title: '雀リーグの不具合を改善',
+    body: '不具合を改善したアップデートを公開しました。',
+    appSlug: 'mahjong-league',
+  },
+  {
     date: '2026-09-23',
-    status: 'planned',
-    title: '旅跡に共有機能を追加予定',
-    body: '訪れた場所の記録を、他の人と共有できるようにする機能を計画しています。',
+    status: 'released',
+    title: '旅跡に共有機能を追加',
+    body: '訪れた場所の記録を、他の人と共有できるようになりました。',
     appSlug: 'tabiato',
   },
   {
