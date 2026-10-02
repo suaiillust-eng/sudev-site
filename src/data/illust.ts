@@ -31,4 +31,7 @@ export interface Illust {
 }
 
 /** ページに載せるイラスト。並び順がそのまま表示順。 */
-export const illusts: Illust[] = [];
+export const illusts: Illust[] = [
+  { file: '01-straw-hat.webp', title: '麦わら帽子', width: 474, height: 714 },
+  { file: '02-black-cat.webp', title: '黒猫の着ぐるみ', width: 1063, height: 1600 },
+];
