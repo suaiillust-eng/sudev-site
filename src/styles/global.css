@@ -124,6 +124,13 @@ p, li { text-wrap: pretty; }
   color: color-mix(in srgb, var(--accent) 70%, var(--text));
 }
 
+.badge-r18 {
+  border-color: var(--danger-border);
+  background: var(--danger-bg);
+  color: var(--danger-text);
+  letter-spacing: 0.06em;
+}
+
 .icon-img {
   border-radius: 23%;
   background: var(--icon-bg);

@@ -77,9 +77,13 @@ const releasedCount = releasedApps().length;
     <div class="container">
       <div class="x-card">
         <div>
-          <p class="eyebrow">Illustration</p>
-          <h2 class="section-title">アニメイラストも描いています</h2>
+          <div class="illust-head">
+            <p class="eyebrow">Illustration</p>
+            <span class="badge badge-r18">R18を含む</span>
+          </div>
+          <h2 class="section-title">アニメイラストも生成しています</h2>
           <p class="x-note">PatreonとpixivのURLと、作品の一部をまとめています。</p>
+          <p class="adult-note">リンク先のPatreon・pixivにはR18作品が含まれます。18歳未満の方は閲覧しないでください。</p>
         </div>
         <a class="btn btn-ghost" href={withBase('/illust')}>イラストを見る</a>
       </div>
@@ -259,6 +263,10 @@ const releasedCount = releasedApps().length;
     color: var(--text-dim);
   }
   .x-todo { margin: 0; color: var(--text-dim); font-size: 13px; }
+
+  .illust-head { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+  .illust-head .eyebrow { margin: 0; }
+  .adult-note { margin: 6px 0 0; color: var(--danger-text); font-size: 13px; }
 
   .about-text { color: var(--text-muted); margin: 14px 0 24px; }
 </style>
