@@ -13,14 +13,14 @@ export interface Notice {
 
 export const notices: Notice[] = [
   {
-    date: '2026-10-02',
+    date: '2026-10-03',
     status: 'released',
     title: '雀リーグの不具合を改善',
     body: '不具合を改善したアップデートを公開しました。',
     appSlug: 'mahjong-league',
   },
   {
-    date: '2026-09-23',
+    date: '2026-09-25',
     status: 'released',
     title: '旅跡に共有機能を追加',
     body: '訪れた場所の記録を、他の人と共有できるようになりました。',

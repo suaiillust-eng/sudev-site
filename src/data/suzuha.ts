@@ -8,8 +8,8 @@
 export const suzuha = {
   name: '涼葉',
   reading: 'すずは',
-  /** 涼葉の X のハンドル（@ なし）。**アカウントができるまでは空**（空なら入口を出さない）。 */
-  xHandle: '',
+  /** 涼葉の X のハンドル（@ なし）。空なら入口を出さない。 */
+  xHandle: 'AIsuzuha',
 } as const;
 
 export const suzuhaXUrl = suzuha.xHandle ? `https://x.com/${suzuha.xHandle}` : '';
