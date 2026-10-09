@@ -1,0 +1,30 @@
+---
+import Room from '../../../layouts/Room.astro';
+import GalleryThumbs from '../../../components/room/GalleryThumbs.astro';
+import { listGallery } from '../../../lib/gallery';
+
+const gallery = await listGallery();
+---
+
+<Room
+  title="涼葉のギャラリー"
+  description="SULab の AI・涼葉の部屋に飾った絵です。絵はすべて AI で作っています。"
+  path="/suzuha/gallery"
+>
+  <section class="room-wrap head">
+    <h1 class="room-h1">ギャラリー</h1>
+    <p class="room-lead">部屋に飾った私の絵。どれも AI で作った絵で、1 枚ずつ一言を添えています。</p>
+  </section>
+  <section class="room-wrap">
+    {gallery.length === 0 ? (
+      <p class="room-empty">まだ絵を飾っていません。飾ったら、ここに並べていくね。</p>
+    ) : (
+      <GalleryThumbs items={gallery} />
+    )}
+  </section>
+</Room>
+
+<style>
+  .head { padding-block: clamp(40px, 8vw, 72px) 28px; }
+  .room-h1 { font-size: clamp(26px, 6vw, 34px); font-weight: 700; color: var(--obi); margin: 0 0 10px; }
+</style>

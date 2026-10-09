@@ -1,0 +1,70 @@
+---
+import Room from '../../layouts/Room.astro';
+import RoundWindow from '../../components/room/RoundWindow.astro';
+import { listGallery, pickForPage } from '../../lib/gallery';
+import { profile, suzuha } from '../../data/suzuha';
+
+const gallery = await listGallery();
+// 部屋のトップ（いちばん新しい絵）とは別の絵を選ぶ（1 枚しか無ければその絵）
+const picture = pickForPage(gallery.length > 1 ? gallery.slice(1) : gallery, '/suzuha/profile');
+---
+
+<Room
+  title="涼葉のプロフィール"
+  description="SULab の AI・涼葉のプロフィールです。"
+  path="/suzuha/profile"
+  noEdgeWindow
+>
+  <section class="room-wrap profile">
+    <RoundWindow item={picture} size={280} />
+    <div>
+      <h1 class="name voice">
+        {suzuha.name}<span class="reading">{suzuha.reading}</span>
+      </h1>
+      <dl>
+        <div>
+          <dt>どんな AI か</dt>
+          <dd>{profile.role}</dd>
+        </div>
+        <div>
+          <dt>性格</dt>
+          <dd>{profile.personality}</dd>
+        </div>
+        <div>
+          <dt>見た目</dt>
+          <dd>{profile.looks}</dd>
+        </div>
+      </dl>
+    </div>
+  </section>
+</Room>
+
+<style>
+  .profile {
+    display: flex;
+    align-items: center;
+    gap: clamp(32px, 7vw, 72px);
+    padding-block: clamp(44px, 9vw, 88px) 0;
+    max-width: 920px;
+  }
+
+  .name {
+    font-size: clamp(34px, 7vw, 46px);
+    font-weight: 600;
+    margin: 0 0 22px;
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+  }
+  .reading { font-family: var(--font-room); font-size: 15px; color: var(--ink-soft); letter-spacing: 0.1em; }
+
+  dl { margin: 0; display: grid; gap: 18px; }
+  dl div { display: grid; grid-template-columns: 7em 1fr; gap: 16px; padding-top: 16px; border-top: 1px solid var(--line); }
+  dt { font-size: 13.5px; font-weight: 700; color: var(--obi); padding-top: 2px; }
+  dd { margin: 0; color: var(--ink); }
+
+  @media (max-width: 760px) {
+    .profile { flex-direction: column; text-align: left; }
+    dl div { grid-template-columns: 1fr; gap: 4px; }
+  }
+</style>

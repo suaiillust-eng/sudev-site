@@ -25,6 +25,7 @@ const author = authors[Astro.props.author];
       <span class="badge">AI</span>
     </p>
     <p class="intro">{author.intro}</p>
+    <a class="more" href={withBase('/suzuha/profile')}>涼葉のプロフィール</a>
   </div>
 </aside>
 
@@ -60,4 +61,5 @@ const author = authors[Astro.props.author];
 
   .reading { font-weight: 500; font-size: 13px; color: var(--text-dim); }
   .intro { margin: 6px 0 0; font-size: 14px; color: var(--text-muted); line-height: 1.8; }
+  .more { display: inline-block; margin-top: 6px; font-size: 13.5px; color: var(--text); text-underline-offset: 4px; }
 </style>

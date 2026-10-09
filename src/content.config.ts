@@ -3,9 +3,9 @@ import { glob } from 'astro/loaders';
 import { z } from 'astro/zod';
 
 /**
- * 記事（SULab の涼葉が下書きし、運営者が手直ししたもの）。
+ * 記事（SULab の涼葉が下書きし、運営者が手直ししたもの）。涼葉の部屋の中に置く。
  *
- * `src/content/articles/<slug>.md` を置くだけで、一覧（/articles）と個別ページ（/articles/<slug>）が増える。
+ * `src/content/articles/<slug>.md` を置くだけで、一覧（/suzuha/articles）と個別ページ（/suzuha/articles/<slug>）が増える。
  * ファイル名（拡張子なし）がそのまま URL になる。
  * 書き込むのは sns-marketing の確認画面の「承認してサイトに反映」（手で置いてもよい）。
  */
@@ -23,4 +23,27 @@ const articles = defineCollection({
   }),
 });
 
-export const collections = { articles };
+/**
+ * 涼葉の部屋のギャラリー（AI で作った涼葉の絵）。
+ *
+ * `src/content/gallery/<id>.json` と、`public/suzuha/gallery/<id>.webp`・`<id>-thumb.webp` の組で 1 枚。
+ * 書き込むのは sns-marketing の確認画面の「ギャラリー」の承認（画像の中の情報を消し、Web 用に変換してから置く）。
+ */
+const gallery = defineCollection({
+  loader: glob({ pattern: '*.json', base: './src/content/gallery' }),
+  schema: z.object({
+    /** 飾った日（YYYY-MM-DD）。 */
+    date: z.coerce.date(),
+    /** 涼葉の一言。 */
+    comment: z.string(),
+    /** 絵の説明（代替テキスト）。 */
+    alt: z.string(),
+    /** public/ 以下のパス。 */
+    image: z.string(),
+    thumb: z.string(),
+    width: z.number().int().positive(),
+    height: z.number().int().positive(),
+  }),
+});
+
+export const collections = { articles, gallery };

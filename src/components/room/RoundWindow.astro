@@ -1,0 +1,111 @@
+---
+/**
+ * 丸窓。部屋の中に涼葉の絵を飾る円い窓（部屋のいちばん目立つところに 1 つだけ大きく使う）。
+ * 絵が無いあいだは、窓の場所だけを空けておく。
+ */
+import { withBase } from '../../lib/url';
+import type { GalleryItem } from '../../lib/gallery';
+
+interface Props {
+  item?: GalleryItem | undefined;
+  /** 窓の直径（px の上限。画面が狭いときは縮む）。 */
+  size?: number;
+  /** 絵をギャラリーの 1 枚のページへつなぐ。 */
+  link?: boolean;
+  /** 読み込みを急ぐ（部屋のトップの大きな窓）。 */
+  eager?: boolean;
+}
+
+const { item, size = 320, link = true, eager = false } = Astro.props;
+const href = item ? withBase(`/suzuha/gallery/${item.id}`) : undefined;
+const src = item ? withBase(size > 200 ? item.data.image : item.data.thumb) : undefined;
+---
+
+<figure class:list={['window', { opening: eager }]} style={`--size: ${size}px`}>
+  {item ? (
+    link ? (
+      <a href={href} class="pane" aria-label="この絵をギャラリーで見る">
+        <img
+          src={src}
+          alt={item.data.alt}
+          width={item.data.width}
+          height={item.data.height}
+          loading={eager ? 'eager' : 'lazy'}
+          decoding="async"
+        />
+      </a>
+    ) : (
+      <div class="pane">
+        <img
+          src={src}
+          alt={item.data.alt}
+          width={item.data.width}
+          height={item.data.height}
+          loading={eager ? 'eager' : 'lazy'}
+          decoding="async"
+        />
+      </div>
+    )
+  ) : (
+    <div class="pane empty">
+      <span class="voice">絵を飾る場所</span>
+    </div>
+  )}
+</figure>
+
+<style>
+  .window {
+    margin: 0;
+    width: min(var(--size), 78vw);
+    aspect-ratio: 1;
+    height: auto;
+    min-height: 0;
+    flex: none;
+    border-radius: 50%;
+    padding: clamp(6px, 1.6vw, 10px);
+    /* 窓の枠: 帯紺の輪の外に、水色のにじみ */
+    background: var(--obi);
+    box-shadow:
+      0 0 0 clamp(6px, 1.6vw, 12px) var(--mizu),
+      0 18px 44px rgba(30, 43, 87, 0.16);
+  }
+
+  .pane {
+    position: relative;
+    display: block;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    overflow: hidden;
+    background: var(--mizu-soft);
+    box-shadow: inset 0 0 0 1px var(--kin);
+  }
+
+  /* 絵の縦横の大きさで窓が伸びないよう、窓の中に重ねて置く */
+  .pane img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    /* 顔が上の方にある絵が多いので、少し上を中心にする */
+    object-position: 50% 22%;
+  }
+
+  /* 動きは部屋のトップの窓が開くときの 1 回だけ */
+  .opening .pane img { animation: open 0.9s ease-out both; }
+
+  @keyframes open {
+    from { opacity: 0; transform: scale(1.04); }
+    to { opacity: 1; transform: none; }
+  }
+
+  .empty {
+    display: grid;
+    place-items: center;
+    background:
+      radial-gradient(circle at 50% 38%, #fff 0 18%, transparent 19%),
+      var(--mizu-soft);
+  }
+  .empty .voice { font-size: 14px; color: var(--ink-soft); }
+</style>

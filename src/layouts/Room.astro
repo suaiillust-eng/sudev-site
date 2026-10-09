@@ -1,0 +1,179 @@
+---
+/**
+ * 涼葉の部屋（/suzuha/ の下）の共通の枠。
+ *
+ * - 部屋の中だけ明るいテーマ（styles/room.css）。サイト全体はダークテーマのまま
+ * - どのページにも、SULab のトップへのリンクと、涼葉の X への入口（アカウントができるまでは出さない）を置く
+ * - ページの端に、ギャラリーから選んだ絵を小さな丸窓で飾る（絵が無ければ出さない）
+ */
+import Base from './Base.astro';
+import RoundWindow from '../components/room/RoundWindow.astro';
+import { listGallery, pickForPage } from '../lib/gallery';
+import { roomLinks, suzuha, suzuhaXUrl } from '../data/suzuha';
+import { site } from '../data/site';
+import { withBase } from '../lib/url';
+import '../styles/room.css';
+
+interface Props {
+  title: string;
+  description: string;
+  path: string;
+  /** ページの端の小さな丸窓を出さない（部屋のトップ・プロフィールのように、大きな窓があるページ）。 */
+  noEdgeWindow?: boolean;
+}
+
+const { title, description, path, noEdgeWindow = false } = Astro.props;
+const current = path.replace(/\/$/, '');
+const isCurrent = (linkPath: string) =>
+  linkPath === '/suzuha' ? current === '/suzuha' : current.startsWith(linkPath);
+const edgeItem = noEdgeWindow ? undefined : pickForPage(await listGallery(), path);
+---
+
+<Base title={title} description={description} path={path} room>
+  <header class="room-bar">
+    <div class="room-wrap bar">
+      <a class="room-name voice" href={withBase('/suzuha')}>{suzuha.name}の部屋</a>
+      <nav aria-label="部屋の中">
+        <ul>
+          {roomLinks.map((link) => (
+            <li>
+              <a href={withBase(link.path)} aria-current={isCurrent(link.path) ? 'page' : undefined}>
+                {link.label}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </nav>
+      <div class="outside">
+        {suzuhaXUrl && (
+          <a href={suzuhaXUrl} target="_blank" rel="noopener">涼葉の X</a>
+        )}
+        <a href={withBase('/')}>{site.name} のトップへ</a>
+      </div>
+    </div>
+    <!-- 帯と帯締め -->
+    <div class="obi" aria-hidden="true"></div>
+  </header>
+
+  <main id="main" class="room-main">
+    <slot />
+  </main>
+
+  <footer class="room-foot">
+    <div class="room-wrap foot">
+      {edgeItem && (
+        <div class="edge">
+          <RoundWindow item={edgeItem} size={112} />
+          <p class="voice edge-line">{edgeItem.data.comment}</p>
+        </div>
+      )}
+      <div class="foot-links">
+        <a href={withBase('/')}>{site.name} のトップへ</a>
+        {suzuhaXUrl && (
+          <a href={suzuhaXUrl} target="_blank" rel="noopener">涼葉の X</a>
+        )}
+        <a href={withBase('/privacy')}>プライバシーポリシー</a>
+      </div>
+      <p class="foot-note">涼葉は {site.name} の AI です。部屋の絵は AI で作っています。</p>
+    </div>
+  </footer>
+</Base>
+
+<style>
+  .room-bar {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: rgba(248, 251, 252, 0.92);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+
+  .bar {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 8px 24px;
+    min-height: 60px;
+    padding-block: 8px;
+  }
+
+  .room-name {
+    font-size: 18px;
+    font-weight: 600;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+
+  nav ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2px 4px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  nav a {
+    display: block;
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-size: 14px;
+    color: var(--ink);
+    text-decoration: none;
+  }
+  nav a:hover { background: var(--mizu-soft); }
+  nav a[aria-current='page'] { background: var(--mizu); color: var(--obi); font-weight: 700; }
+
+  .outside {
+    display: flex;
+    gap: 14px;
+    font-size: 13px;
+    white-space: nowrap;
+  }
+  .outside a { color: var(--ink-soft); text-underline-offset: 4px; }
+  .outside a:hover { color: var(--obi); }
+
+  /* 帯（紺）と、その上に細い帯締め（薄金） */
+  .obi {
+    height: 7px;
+    background:
+      linear-gradient(var(--kin), var(--kin)) 0 3px / 100% 1px no-repeat,
+      var(--obi);
+  }
+
+  .room-main { min-height: 60vh; }
+
+  .room-foot {
+    margin-top: clamp(56px, 10vw, 96px);
+    padding-block: 36px 40px;
+    background: var(--mizu-soft);
+    border-top: 1px solid var(--line);
+  }
+
+  .foot { display: grid; gap: 22px; }
+
+  .edge {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+  .edge-line { margin: 0; font-size: 15px; max-width: 30em; }
+
+  .foot-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 22px;
+    font-size: 14px;
+  }
+  .foot-links a { color: var(--obi); text-underline-offset: 4px; text-decoration-color: var(--asagi); }
+
+  .foot-note { margin: 0; font-size: 12.5px; color: var(--ink-soft); }
+
+  @media (max-width: 760px) {
+    .bar { grid-template-columns: 1fr auto; }
+    nav { grid-column: 1 / -1; grid-row: 2; margin-inline: -12px; }
+    nav ul { flex-wrap: nowrap; overflow-x: auto; }
+    .outside a:not(:last-child) { display: none; }
+  }
+</style>

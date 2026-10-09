@@ -40,9 +40,27 @@ npm run assets   # OGP画像・favicon・ヘッダー用アバターを再生成
 - 現在は全12本が `status: 'released'`。開発中セクションはページから外してある
   （`status: 'development'` のアプリを足しても、今はどこにも表示されない）
 
-### 記事を追加する
+### 涼葉の部屋（/suzuha/）
 
-`src/content/articles/<slug>.md` を置くだけで、一覧（`/articles`）と個別ページ（`/articles/<slug>`）が増える。
+SULab の AI キャラクター「涼葉」の部屋。サイト全体はダークテーマのまま、部屋の中だけ明るいテーマ
+（`src/styles/room.css`。色は涼葉の浴衣の水色・白・帯の紺）。枠は `src/layouts/Room.astro`。
+
+| ページ | 中身 |
+|---|---|
+| `/suzuha/` | 部屋のトップ。丸窓の絵・あいさつ・新しい記事・新しく飾った絵 |
+| `/suzuha/profile/` | プロフィール（設定書にあることだけ。`src/data/suzuha.ts`） |
+| `/suzuha/gallery/` と `/suzuha/gallery/<id>/` | ギャラリー。1 枚ずつ涼葉の一言と「AI で作った絵です」を出す |
+| `/suzuha/articles/` と `/suzuha/articles/<slug>/` | 記事 |
+
+- 部屋のどのページにも、SULab のトップへのリンクと、涼葉の X への入口を置く。X の入口は
+  `src/data/suzuha.ts` の `xHandle` が空のあいだは出さない
+- ページの端の小さな丸窓には、ギャラリーの絵をページごとに 1 枚選んで飾る（絵が無ければ出さない）
+- 絵が 1 枚も無いあいだは、トップの丸窓は「絵を飾る場所」として空けておく
+- 文字は丸ゴシック（部屋）と明朝（涼葉の言葉）。Web フォントは読み込まない
+
+#### 記事を追加する
+
+`src/content/articles/<slug>.md` を置くだけで、一覧（`/suzuha/articles`）と個別ページ（`/suzuha/articles/<slug>`）が増える。
 ファイル名（拡張子なし）がそのまま URL になる（英小文字・数字・ハイフン）。
 
 ```md
@@ -55,11 +73,24 @@ date: 2026-10-09
 本文（Markdown）
 ```
 
-- 書き手は SULab の AI キャラクター「涼葉」（`src/data/authors.ts`）。個別ページに涼葉の紹介（AI であること）を出す
+- 書き手は涼葉（`src/data/authors.ts`）。個別ページに涼葉の紹介（AI であること）を出す
 - 全記事に「この記事は SULab の AI・涼葉が下書きし、運営者が手直ししています。」を**ページ側で必ず出す**
   （`ARTICLE_DISCLOSURE`。本文には書かない）
 - 普段は sns-marketing の確認画面の「承認してサイトに反映」が記事を書き込み、手元でコミットする（push はしない）。
   公開は `main` に push したとき（下の「公開」）
+
+#### 絵を飾る
+
+`src/content/gallery/<id>.json` と `public/suzuha/gallery/<id>.webp`・`<id>-thumb.webp` の組で 1 枚。
+
+```json
+{ "date": "2026-10-10", "comment": "涼葉の一言", "alt": "絵の説明",
+  "image": "/suzuha/gallery/<id>.webp", "thumb": "/suzuha/gallery/<id>-thumb.webp",
+  "width": 1200, "height": 1600 }
+```
+
+普段は sns-marketing の確認画面の「ギャラリー」で承認すると、画像の中の情報（生成のプロンプト・設定・撮影や作成の情報）を
+すべて消して Web 用（webp）に変換し、ここに書き込んで手元でコミットする（push はしない）。**手で置くときも、画像の情報を消してから置く。**
 
 ### 将来 Games を足すとき
 

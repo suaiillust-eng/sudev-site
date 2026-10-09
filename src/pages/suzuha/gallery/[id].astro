@@ -1,0 +1,91 @@
+---
+import Room from '../../../layouts/Room.astro';
+import { listGallery, type GalleryItem } from '../../../lib/gallery';
+import { formatDate } from '../../../lib/articles';
+import { AI_ART_NOTE } from '../../../data/suzuha';
+import { withBase } from '../../../lib/url';
+
+export async function getStaticPaths() {
+  const items = await listGallery();
+  return items.map((item, index) => ({
+    params: { id: item.id },
+    props: { item, newer: items[index - 1], older: items[index + 1] },
+  }));
+}
+
+interface Props {
+  item: GalleryItem;
+  newer?: GalleryItem | undefined;
+  older?: GalleryItem | undefined;
+}
+
+const { item, newer, older } = Astro.props;
+const date = formatDate(item.data.date);
+---
+
+<Room
+  title={`涼葉の絵（${date}）`}
+  description={item.data.comment}
+  path={`/suzuha/gallery/${item.id}`}
+  noEdgeWindow
+>
+  <article class="room-wrap piece">
+    <a class="back" href={withBase('/suzuha/gallery')}>ギャラリーにもどる</a>
+    <figure>
+      <img
+        src={withBase(item.data.image)}
+        alt={item.data.alt}
+        width={item.data.width}
+        height={item.data.height}
+        decoding="async"
+      />
+      <figcaption>
+        <p class="voice comment">{item.data.comment}</p>
+        <p class="meta">
+          <time datetime={item.data.date.toISOString().slice(0, 10)}>{date} に飾りました</time>
+          <span class="ai-note">{AI_ART_NOTE}</span>
+        </p>
+      </figcaption>
+    </figure>
+    <nav class="pager" aria-label="ほかの絵">
+      {newer ? <a href={withBase(`/suzuha/gallery/${newer.id}`)}>新しい絵</a> : <span></span>}
+      {older ? <a href={withBase(`/suzuha/gallery/${older.id}`)}>前の絵</a> : <span></span>}
+    </nav>
+  </article>
+</Room>
+
+<style>
+  .piece { padding-top: clamp(28px, 6vw, 48px); max-width: 880px; }
+  .back { font-size: 14px; color: var(--ink-soft); text-underline-offset: 4px; }
+  figure { margin: 22px 0 0; }
+  img {
+    margin-inline: auto;
+    max-height: 82vh;
+    width: auto;
+    height: auto;
+    border-radius: 16px;
+    background: var(--mizu-soft);
+    box-shadow: 0 0 0 8px #fff, 0 0 0 9px var(--line), 0 20px 46px rgba(30, 43, 87, 0.12);
+  }
+  figcaption { max-width: 34em; margin: 34px auto 0; text-align: center; }
+  .comment { font-size: clamp(17px, 2.6vw, 19px); line-height: 2; margin: 0; }
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 6px 12px;
+    margin: 14px 0 0;
+    font-size: 13px;
+    color: var(--ink-soft);
+  }
+  .pager {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 40px;
+    padding-top: 18px;
+    border-top: 1px solid var(--line);
+    font-size: 14.5px;
+  }
+  .pager a { color: var(--obi); text-underline-offset: 4px; text-decoration-color: var(--asagi); }
+</style>

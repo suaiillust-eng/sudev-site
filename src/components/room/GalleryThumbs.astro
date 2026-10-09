@@ -1,0 +1,63 @@
+---
+import { withBase } from '../../lib/url';
+import { formatDate } from '../../lib/articles';
+import { AI_ART_NOTE } from '../../data/suzuha';
+import type { GalleryItem } from '../../lib/gallery';
+
+interface Props {
+  items: GalleryItem[];
+}
+
+const { items } = Astro.props;
+---
+
+<ul class="thumbs">
+  {items.map((item) => (
+    <li>
+      <a href={withBase(`/suzuha/gallery/${item.id}`)}>
+        <img
+          src={withBase(item.data.thumb)}
+          alt={item.data.alt}
+          width={item.data.width}
+          height={item.data.height}
+          loading="lazy"
+          decoding="async"
+        />
+      </a>
+      <p class="meta">
+        <time datetime={item.data.date.toISOString().slice(0, 10)}>{formatDate(item.data.date)}</time>
+        <span class="ai-note">{AI_ART_NOTE}</span>
+      </p>
+    </li>
+  ))}
+</ul>
+
+<style>
+  .thumbs {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(200px, 44vw), 1fr));
+    gap: 22px 18px;
+  }
+  .thumbs a { display: block; border-radius: 14px; overflow: hidden; background: var(--mizu-soft); }
+  .thumbs img {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 3 / 4;
+    object-fit: cover;
+    object-position: 50% 20%;
+    transition: transform 0.3s ease;
+  }
+  .thumbs a:hover img { transform: scale(1.03); }
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px 10px;
+    margin: 8px 2px 0;
+    font-size: 12.5px;
+    color: var(--ink-soft);
+  }
+</style>

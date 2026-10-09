@@ -12,9 +12,14 @@ interface Props {
   ogImage?: string;
   /** ページ固有の canonical パス（例: '/apps/data-jong'） */
   path?: string;
+  /**
+   * 涼葉の部屋（/suzuha/）のページ。サイトのヘッダーとフッターを出さず、部屋の明るいテーマにする
+   * （部屋の見た目は layouts/Room.astro。サイト全体はダークテーマのまま）。
+   */
+  room?: boolean;
 }
 
-const { title, description, ogImage = '/og.jpg', path = '/' } = Astro.props;
+const { title, description, ogImage = '/og.jpg', path = '/', room = false } = Astro.props;
 const pageTitle = title === site.name ? `${site.name} — 個人開発アプリ` : `${title} | ${site.name}`;
 const canonical = new URL(withBase(path), Astro.site ?? site.url).toString();
 const ogUrl = new URL(withBase(ogImage), Astro.site ?? site.url).toString();
@@ -30,7 +35,7 @@ const ogUrl = new URL(withBase(ogImage), Astro.site ?? site.url).toString();
     <link rel="canonical" href={canonical} />
     <link rel="icon" type="image/png" href={withBase('/favicon.png')} />
     <link rel="apple-touch-icon" href={withBase('/apple-touch-icon.png')} />
-    <meta name="theme-color" content="#0a0b0e" />
+    <meta name="theme-color" content={room ? '#f8fbfc' : '#0a0b0e'} />
 
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content={site.name} />
@@ -45,12 +50,18 @@ const ogUrl = new URL(withBase(ogImage), Astro.site ?? site.url).toString();
     <meta name="twitter:image" content={ogUrl} />
     {site.xHandle && <meta name="twitter:site" content={`@${site.xHandle}`} />}
   </head>
-  <body>
-    <Header />
-    <main id="main">
+  <body class={room ? 'room' : undefined}>
+    {room ? (
       <slot />
-    </main>
-    <Footer />
+    ) : (
+      <>
+        <Header />
+        <main id="main">
+          <slot />
+        </main>
+        <Footer />
+      </>
+    )}
     <script is:inline>
       // 自分のアクセスは計測対象から外す。
       // 一度だけ ?meonly=1 を付けて開くと、このブラウザには目印が残り、

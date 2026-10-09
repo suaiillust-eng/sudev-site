@@ -1,0 +1,111 @@
+/*
+ * 涼葉の部屋（/suzuha/）だけの明るいテーマ。サイト全体（ダーク）の変数を body.room で上書きする。
+ *
+ * 色は涼葉の浴衣から取る:
+ *   和紙白 #f8fbfc（地）・水色 #d3ecf6（浴衣）・浅葱 #6aafcb（線）・帯紺 #1e2b57（見出し・ボタン・窓の枠）
+ *   墨紺 #39445f（本文）・薄金 #cdb474（帯締めの細い線とフォーカスだけ）
+ * 文字は丸ゴシック（部屋の文字）と明朝（涼葉の言葉）の 2 つ。Web フォントは読み込まない（外部への通信を増やさない）。
+ */
+body.room {
+  color-scheme: light;
+
+  --paper: #f8fbfc;
+  --mizu: #d3ecf6;
+  --mizu-soft: #e9f5fa;
+  --asagi: #6aafcb;
+  --obi: #1e2b57;
+  --ink: #39445f;
+  --ink-soft: #66708a;
+  --kin: #cdb474;
+
+  /* サイトの部品（記事の本文・書き手の紹介）が使う変数も部屋の色にする */
+  --bg: var(--paper);
+  --bg-soft: var(--mizu-soft);
+  --surface: #ffffff;
+  --surface-2: var(--mizu-soft);
+  --line: #d6e6ee;
+  --line-strong: #b9d3df;
+  --text: var(--obi);
+  --text-muted: var(--ink);
+  --text-dim: var(--ink-soft);
+  --accent: #2f6f95;
+
+  --font-room: 'Hiragino Maru Gothic ProN', 'Hiragino Maru Gothic Pro', 'BIZ UDPGothic',
+    'Hiragino Sans', 'Yu Gothic', sans-serif;
+  --font-voice: 'Hiragino Mincho ProN', 'Yu Mincho', 'YuMincho', 'Noto Serif JP', serif;
+
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-room);
+}
+
+body.room :focus-visible {
+  outline: 2px solid var(--kin);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+body.room ::selection { background: var(--mizu); color: var(--obi); }
+
+/* 部屋の中の幅 */
+.room-wrap {
+  width: 100%;
+  max-width: 1040px;
+  margin-inline: auto;
+  padding-inline: clamp(16px, 5vw, 32px);
+}
+
+/* 涼葉の言葉（あいさつ・一言）は明朝 */
+.voice {
+  font-family: var(--font-voice);
+  color: var(--obi);
+  letter-spacing: 0.04em;
+}
+
+.room-h2 {
+  font-size: clamp(19px, 4.4vw, 22px);
+  font-weight: 700;
+  color: var(--obi);
+  margin: 0 0 18px;
+}
+
+.room-lead {
+  color: var(--ink);
+  max-width: 38em;
+  margin: 0;
+}
+
+.room-empty {
+  color: var(--ink-soft);
+  margin: 0;
+}
+
+.room-more {
+  display: inline-block;
+  margin-top: 18px;
+  font-size: 14.5px;
+  font-weight: 700;
+  color: var(--obi);
+  text-underline-offset: 5px;
+  text-decoration-color: var(--asagi);
+}
+.room-more:hover { text-decoration-color: var(--obi); }
+
+/* AI で作った絵であることの表記 */
+.ai-note {
+  display: inline-block;
+  font-size: 12px;
+  line-height: 1.6;
+  padding: 1px 9px;
+  border-radius: 999px;
+  border: 1px solid var(--line-strong);
+  color: var(--ink-soft);
+  background: #fff;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body.room *, body.room *::before, body.room *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}

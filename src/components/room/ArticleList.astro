@@ -1,0 +1,44 @@
+---
+import { formatDate, type Article } from '../../lib/articles';
+import { withBase } from '../../lib/url';
+
+interface Props {
+  articles: Article[];
+}
+
+const { articles } = Astro.props;
+---
+
+<ul class="articles">
+  {articles.map((article) => (
+    <li>
+      <a href={withBase(`/suzuha/articles/${article.id}`)}>
+        <time datetime={article.data.date.toISOString().slice(0, 10)}>{formatDate(article.data.date)}</time>
+        <span class="title">{article.data.title}</span>
+        <span class="desc">{article.data.description}</span>
+      </a>
+    </li>
+  ))}
+</ul>
+
+<style>
+  .articles { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line); }
+  .articles li { border-bottom: 1px solid var(--line); }
+  .articles a {
+    display: grid;
+    grid-template-columns: 7.5em 1fr;
+    gap: 2px 18px;
+    padding: 18px 4px;
+    text-decoration: none;
+    color: var(--ink);
+  }
+  .articles a:hover .title { text-decoration: underline; text-decoration-color: var(--asagi); text-underline-offset: 5px; }
+  time { grid-row: span 2; font-size: 13px; color: var(--ink-soft); padding-top: 3px; }
+  .title { font-weight: 700; color: var(--obi); font-size: 16.5px; line-height: 1.6; }
+  .desc { font-size: 14px; color: var(--ink-soft); line-height: 1.75; }
+
+  @media (max-width: 560px) {
+    .articles a { grid-template-columns: 1fr; }
+    time { grid-row: auto; padding: 0; }
+  }
+</style>
