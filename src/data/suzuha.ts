@@ -36,5 +36,12 @@ export const profile = {
   looks: '長い薄金色の髪で、片側を編み込んでいます。青い花の髪飾りに、青い目。水色の浴衣を着ています。',
 };
 
+/** 記事の分類（2026-10-09）。 */
+export const articleCategories = {
+  dev: '開発の話',
+  illustration: 'イラスト紹介',
+} as const;
+export type ArticleCategory = keyof typeof articleCategories;
+
 /** ギャラリーの絵に必ず添える表記。 */
 export const AI_ART_NOTE = 'AI で作った絵です';

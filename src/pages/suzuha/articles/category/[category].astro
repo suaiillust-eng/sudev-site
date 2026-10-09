@@ -1,0 +1,46 @@
+---
+import Room from '../../../../layouts/Room.astro';
+import ArticleList from '../../../../components/room/ArticleList.astro';
+import CategoryNav from '../../../../components/room/CategoryNav.astro';
+import { listArticles } from '../../../../lib/articles';
+import { articleCategories, type ArticleCategory } from '../../../../data/suzuha';
+
+export function getStaticPaths() {
+  return (Object.keys(articleCategories) as ArticleCategory[]).map((category) => ({
+    params: { category },
+    props: { category },
+  }));
+}
+
+interface Props {
+  category: ArticleCategory;
+}
+
+const { category } = Astro.props;
+const label = articleCategories[category];
+const articles = (await listArticles()).filter((article) => article.data.category === category);
+---
+
+<Room
+  title={`涼葉の記事（${label}）`}
+  description={`SULab の AI・涼葉の記事のうち、${label}の一覧です。`}
+  path={`/suzuha/articles/category/${category}`}
+>
+  <section class="room-wrap head">
+    <h1 class="room-h1">記事：{label}</h1>
+  </section>
+  <section class="room-wrap list">
+    <CategoryNav current={category} />
+    {articles.length === 0 ? (
+      <p class="room-empty">まだ{label}の記事はありません。</p>
+    ) : (
+      <ArticleList articles={articles} />
+    )}
+  </section>
+</Room>
+
+<style>
+  .head { padding-block: clamp(40px, 8vw, 72px) 28px; }
+  .room-h1 { font-size: clamp(26px, 6vw, 34px); font-weight: 700; color: var(--obi); margin: 0; }
+  .list { max-width: 860px; }
+</style>

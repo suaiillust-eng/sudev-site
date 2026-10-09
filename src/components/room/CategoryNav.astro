@@ -1,0 +1,40 @@
+---
+import { articleCategories, type ArticleCategory } from '../../data/suzuha';
+import { withBase } from '../../lib/url';
+
+interface Props {
+  /** いま見ている分類。すべてなら undefined。 */
+  current?: ArticleCategory | undefined;
+}
+
+const { current } = Astro.props;
+const links = [
+  { label: 'すべて', href: withBase('/suzuha/articles'), active: current === undefined },
+  ...(Object.keys(articleCategories) as ArticleCategory[]).map((key) => ({
+    label: articleCategories[key],
+    href: withBase(`/suzuha/articles/category/${key}`),
+    active: current === key,
+  })),
+];
+---
+
+<nav class="cats" aria-label="記事の分類">
+  {links.map((link) => (
+    <a href={link.href} aria-current={link.active ? 'page' : undefined}>{link.label}</a>
+  ))}
+</nav>
+
+<style>
+  .cats { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 22px; }
+  .cats a {
+    padding: 5px 13px;
+    border-radius: 999px;
+    border: 1px solid var(--line-strong);
+    font-size: 13.5px;
+    color: var(--ink);
+    text-decoration: none;
+    background: #fff;
+  }
+  .cats a:hover { border-color: var(--asagi); }
+  .cats a[aria-current='page'] { background: var(--obi); border-color: var(--obi); color: #fff; }
+</style>

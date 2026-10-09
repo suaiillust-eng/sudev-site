@@ -3,7 +3,8 @@ import { render } from 'astro:content';
 import Room from '../../../layouts/Room.astro';
 import AuthorCard from '../../../components/AuthorCard.astro';
 import { listArticles, formatDate, type Article } from '../../../lib/articles';
-import { authors, ARTICLE_DISCLOSURE } from '../../../data/authors';
+import { authors } from '../../../data/authors';
+import { AI_ART_NOTE, articleCategories } from '../../../data/suzuha';
 import { withBase } from '../../../lib/url';
 
 export async function getStaticPaths() {
@@ -32,11 +33,23 @@ const author = authors[article.data.author];
         {formatDate(article.data.date)}
       </time>
       <h1>{article.data.title}</h1>
-      <p class="byline">{author.byline}</p>
+      <p class="byline">
+        {author.byline}<span class="cat">{articleCategories[article.data.category]}</span>
+      </p>
     </header>
 
-    <!-- 全記事に必ず出す一文。記事担当（AI）には書かせず、ここで出す -->
-    <p class="disclosure">{ARTICLE_DISCLOSURE}</p>
+    {article.data.image && (
+      <figure class="art">
+        <img src={withBase(article.data.image)} alt={article.data.imageAlt ?? ''} decoding="async" />
+        <figcaption>
+          <span class="ai-note">{AI_ART_NOTE}</span>
+          {article.data.gallery && (
+            <a href={withBase(`/suzuha/gallery/${article.data.gallery}`)}>ギャラリーで見る</a>
+          )}
+        </figcaption>
+      </figure>
+    )}
+
 
     <div class="prose">
       <Content />
@@ -57,16 +70,28 @@ const author = authors[article.data.author];
   time { font-size: 13px; color: var(--ink-soft); }
   h1 { font-size: clamp(25px, 5.6vw, 34px); font-weight: 700; color: var(--obi); margin-top: 6px; }
   .byline { margin: 10px 0 0; font-size: 14px; color: var(--ink-soft); }
+  .byline .cat { margin-left: 12px; font-size: 12.5px; }
 
-  .disclosure {
-    margin: 24px 0 0;
-    padding: 12px 16px;
-    border-radius: 12px;
-    border-left: 4px solid var(--obi);
+  .art { margin: 28px 0 0; }
+  .art img {
+    margin-inline: auto;
+    max-height: 78vh;
+    width: auto;
+    height: auto;
+    border-radius: 16px;
     background: var(--mizu-soft);
-    font-size: 13.5px;
-    color: var(--ink);
+    box-shadow: 0 0 0 8px #fff, 0 0 0 9px var(--line), 0 18px 40px rgba(30, 43, 87, 0.12);
   }
+  .art figcaption {
+    display: flex;
+    justify-content: center;
+    gap: 14px;
+    align-items: center;
+    margin-top: 16px;
+    font-size: 13px;
+  }
+  .art figcaption a { color: var(--obi); text-underline-offset: 4px; }
+
 
   .prose { margin-top: 32px; font-size: 16.5px; line-height: 2; color: var(--ink); }
   .prose :global(h2) { font-size: 21px; font-weight: 700; color: var(--obi); margin: 2.2em 0 0.6em; }

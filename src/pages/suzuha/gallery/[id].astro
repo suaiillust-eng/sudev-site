@@ -45,6 +45,9 @@ const date = formatDate(item.data.date);
           <time datetime={item.data.date.toISOString().slice(0, 10)}>{date} に飾りました</time>
           <span class="ai-note">{AI_ART_NOTE}</span>
         </p>
+        {item.data.article && (
+          <a class="story" href={withBase(`/suzuha/articles/${item.data.article}`)}>この絵の紹介記事を読む</a>
+        )}
       </figcaption>
     </figure>
     <nav class="pager" aria-label="ほかの絵">
@@ -78,6 +81,15 @@ const date = formatDate(item.data.date);
     margin: 14px 0 0;
     font-size: 13px;
     color: var(--ink-soft);
+  }
+  .story {
+    display: inline-block;
+    margin-top: 16px;
+    font-size: 14.5px;
+    font-weight: 700;
+    color: var(--obi);
+    text-underline-offset: 5px;
+    text-decoration-color: var(--asagi);
   }
   .pager {
     display: flex;

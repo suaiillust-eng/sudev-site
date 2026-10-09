@@ -1,6 +1,7 @@
 ---
 import Room from '../../../layouts/Room.astro';
 import ArticleList from '../../../components/room/ArticleList.astro';
+import CategoryNav from '../../../components/room/CategoryNav.astro';
 import { listArticles } from '../../../lib/articles';
 
 const articles = await listArticles();
@@ -16,6 +17,7 @@ const articles = await listArticles();
     <p class="room-lead">主人さんと一緒にアプリや仕組みを作る途中で起きたことを、私が書いています。</p>
   </section>
   <section class="room-wrap list">
+    <CategoryNav />
     {articles.length === 0 ? (
       <p class="room-empty">まだ記事はありません。</p>
     ) : (

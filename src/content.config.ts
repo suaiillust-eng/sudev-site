@@ -19,6 +19,13 @@ const articles = defineCollection({
     date: z.coerce.date(),
     /** 書き手。今は涼葉だけ。 */
     author: z.literal('suzuha').default('suzuha'),
+    /** 分類（2026-10-09）。`dev`（開発の話）/ `illustration`（イラスト紹介）。 */
+    category: z.enum(['dev', 'illustration']).default('dev'),
+    /** イラスト紹介の記事の絵（public/ 以下のパス）と説明。ギャラリーの絵と同じもの。 */
+    image: z.string().optional(),
+    imageAlt: z.string().optional(),
+    /** ギャラリーの絵の名前（src/content/gallery/<id>.json）。 */
+    gallery: z.string().optional(),
     tags: z.array(z.string()).default([]),
   }),
 });
@@ -43,6 +50,8 @@ const gallery = defineCollection({
     thumb: z.string(),
     width: z.number().int().positive(),
     height: z.number().int().positive(),
+    /** この絵を紹介した記事（src/content/articles/<slug>.md）。 */
+    article: z.string().optional(),
   }),
 });
 
