@@ -1,0 +1,63 @@
+---
+import { withBase } from '../lib/url';
+import { authors, type AuthorId } from '../data/authors';
+
+interface Props {
+  author: AuthorId;
+}
+
+const author = authors[Astro.props.author];
+---
+
+<aside class="author" aria-label="書き手の紹介">
+  <img
+    class="avatar"
+    src={withBase('/brand/avatar.webp')}
+    alt=""
+    width="52"
+    height="52"
+    loading="lazy"
+    decoding="async"
+  />
+  <div>
+    <p class="name">
+      {author.byline}<span class="reading">（{author.reading}）</span>
+      <span class="badge">AI</span>
+    </p>
+    <p class="intro">{author.intro}</p>
+  </div>
+</aside>
+
+<style>
+  .author {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    padding: 20px;
+    border-radius: var(--radius);
+    border: 1px solid var(--line);
+    background: var(--surface);
+  }
+
+  .avatar {
+    flex: none;
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    object-fit: cover;
+    background: var(--surface-2);
+    box-shadow: 0 0 0 1px var(--line-strong);
+  }
+
+  .name {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    margin: 0;
+    font-weight: 700;
+  }
+
+  .reading { font-weight: 500; font-size: 13px; color: var(--text-dim); }
+  .intro { margin: 6px 0 0; font-size: 14px; color: var(--text-muted); line-height: 1.8; }
+</style>

@@ -40,6 +40,27 @@ npm run assets   # OGP画像・favicon・ヘッダー用アバターを再生成
 - 現在は全12本が `status: 'released'`。開発中セクションはページから外してある
   （`status: 'development'` のアプリを足しても、今はどこにも表示されない）
 
+### 記事を追加する
+
+`src/content/articles/<slug>.md` を置くだけで、一覧（`/articles`）と個別ページ（`/articles/<slug>`）が増える。
+ファイル名（拡張子なし）がそのまま URL になる（英小文字・数字・ハイフン）。
+
+```md
+---
+title: 記事のタイトル
+description: 一覧と OGP に出す短い説明（1〜2文）
+date: 2026-10-09
+---
+
+本文（Markdown）
+```
+
+- 書き手は SULab の AI キャラクター「涼葉」（`src/data/authors.ts`）。個別ページに涼葉の紹介（AI であること）を出す
+- 全記事に「この記事は SULab の AI・涼葉が下書きし、運営者が手直ししています。」を**ページ側で必ず出す**
+  （`ARTICLE_DISCLOSURE`。本文には書かない）
+- 普段は sns-marketing の確認画面の「承認してサイトに反映」が記事を書き込み、手元でコミットする（push はしない）。
+  公開は `main` に push したとき（下の「公開」）
+
 ### 将来 Games を足すとき
 
 `kind: 'game'` を付けたアプリは `releasedApps()`（= `kind: 'app'` のみ）から外れるので、
@@ -150,6 +171,10 @@ src/
   data/site.ts      サイト名・X・問い合わせ先
   pages/index.astro トップページ
   pages/apps/[slug].astro  アプリ詳細ページ（自動生成）
+  pages/articles/          記事の一覧と個別ページ（content/articles/*.md から自動生成）
+  content/articles/        記事の Markdown
+  content.config.ts        記事の frontmatter の形
+  data/authors.ts          記事の書き手（涼葉）と全記事に出す一文
   pages/contact.astro, privacy.astro, 404.astro
   components/       Header / Footer / FeaturedApp / AppCard / AppVisual / AppStoreButton
 scripts/generate-assets.mjs  OGP・favicon 生成
