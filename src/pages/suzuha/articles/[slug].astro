@@ -4,7 +4,7 @@ import Room from '../../../layouts/Room.astro';
 import AuthorCard from '../../../components/AuthorCard.astro';
 import { listArticles, formatDate, type Article } from '../../../lib/articles';
 import { authors } from '../../../data/authors';
-import { AI_ART_NOTE, articleCategories } from '../../../data/suzuha';
+import { articleCategories } from '../../../data/suzuha';
 import { withBase } from '../../../lib/url';
 
 export async function getStaticPaths() {
@@ -41,12 +41,11 @@ const author = authors[article.data.author];
     {article.data.image && (
       <figure class="art">
         <img src={withBase(article.data.image)} alt={article.data.imageAlt ?? ''} decoding="async" />
-        <figcaption>
-          <span class="ai-note">{AI_ART_NOTE}</span>
-          {article.data.gallery && (
+        {article.data.gallery && (
+          <figcaption>
             <a href={withBase(`/suzuha/gallery/${article.data.gallery}`)}>ギャラリーで見る</a>
-          )}
-        </figcaption>
+          </figcaption>
+        )}
       </figure>
     )}
 

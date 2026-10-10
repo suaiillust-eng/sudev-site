@@ -1,6 +1,7 @@
 ---
 import { withBase } from '../lib/url';
 import { authors, type AuthorId } from '../data/authors';
+import { profileIcon } from '../data/suzuha';
 
 interface Props {
   author: AuthorId;
@@ -12,7 +13,7 @@ const author = authors[Astro.props.author];
 <aside class="author" aria-label="書き手の紹介">
   <img
     class="avatar"
-    src={withBase('/brand/avatar.webp')}
+    src={withBase(profileIcon.image)}
     alt=""
     width="52"
     height="52"
@@ -22,7 +23,6 @@ const author = authors[Astro.props.author];
   <div>
     <p class="name">
       {author.byline}<span class="reading">（{author.reading}）</span>
-      <span class="badge">AI</span>
     </p>
     <p class="intro">{author.intro}</p>
     <a class="more" href={withBase('/suzuha/profile')}>涼葉のプロフィール</a>

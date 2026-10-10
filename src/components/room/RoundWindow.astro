@@ -14,15 +14,29 @@ interface Props {
   link?: boolean;
   /** 読み込みを急ぐ（部屋のトップの大きな窓）。 */
   eager?: boolean;
+  /** ギャラリーの絵の代わりに、決まった絵を飾る（プロフィールのアイコン。public/ 以下のパス）。 */
+  fixed?: { image: string; alt: string } | undefined;
 }
 
-const { item, size = 320, link = true, eager = false } = Astro.props;
+const { item, size = 320, link = true, eager = false, fixed } = Astro.props;
 const href = item ? withBase(`/suzuha/gallery/${item.id}`) : undefined;
 const src = item ? withBase(size > 200 ? item.data.image : item.data.thumb) : undefined;
 ---
 
 <figure class:list={['window', { opening: eager }]} style={`--size: ${size}px`}>
-  {item ? (
+  {fixed ? (
+    <div class="pane">
+      <img
+        class="fixed"
+        src={withBase(fixed.image)}
+        alt={fixed.alt}
+        width="640"
+        height="640"
+        loading={eager ? 'eager' : 'lazy'}
+        decoding="async"
+      />
+    </div>
+  ) : item ? (
     link ? (
       <a href={href} class="pane" aria-label="この絵をギャラリーで見る">
         <img
@@ -91,6 +105,8 @@ const src = item ? withBase(size > 200 ? item.data.image : item.data.thumb) : un
     /* 顔が上の方にある絵が多いので、少し上を中心にする */
     object-position: 50% 22%;
   }
+  /* 決まった絵は、もう丸窓に合わせて切り抜いてある */
+  .pane img.fixed { object-position: center; }
 
   /* 動きは部屋のトップの窓が開くときの 1 回だけ */
   .opening .pane img { animation: open 0.9s ease-out both; }

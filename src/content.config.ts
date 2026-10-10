@@ -52,6 +52,8 @@ const gallery = defineCollection({
     height: z.number().int().positive(),
     /** この絵を紹介した記事（src/content/articles/<slug>.md）。 */
     article: z.string().optional(),
+    /** 一覧の縦長の枠で切り抜くときの中心（CSS の object-position。例: "75% 35%"）。横長の絵で顔を外さないため。省くと上寄りの真ん中。 */
+    focus: z.string().optional(),
   }),
 });
 

@@ -1,27 +1,40 @@
 ---
 import Room from '../../layouts/Room.astro';
-import RoundWindow from '../../components/room/RoundWindow.astro';
+import { existsSync } from 'node:fs';
 import GalleryThumbs from '../../components/room/GalleryThumbs.astro';
 import ArticleList from '../../components/room/ArticleList.astro';
 import { listGallery } from '../../lib/gallery';
 import { listArticles } from '../../lib/articles';
-import { greeting } from '../../data/suzuha';
+import { greeting, heroImage } from '../../data/suzuha';
 import { withBase } from '../../lib/url';
 
 const gallery = await listGallery();
 const articles = await listArticles();
+// トップの絵が置かれていなければ、淡い色の帯の上にあいさつを出す
+const hasHero = existsSync(new URL(`../../../public${heroImage.image}`, import.meta.url));
 ---
 
 <Room
   title="涼葉の部屋"
-  description="SULab の AI・涼葉の部屋です。涼葉が書いた記事と、飾った絵を置いています。"
+  description="SULab の涼葉の部屋です。涼葉が書いた記事と、飾った絵を置いています。"
   path="/suzuha"
-  noEdgeWindow
 >
-  <section class="room-wrap hero">
-    <RoundWindow item={gallery[0]} size={360} eager />
-    <div class="greeting voice">
-      {greeting.map((line) => <p>{line}</p>)}
+  <section class="hero" aria-label="あいさつ">
+    {hasHero && (
+      <img
+        class="hero-img"
+        src={withBase(heroImage.image)}
+        alt={heroImage.alt}
+        loading="eager"
+        fetchpriority="high"
+        decoding="async"
+      />
+    )}
+    <div class="hero-scrim" aria-hidden="true"></div>
+    <div class="room-wrap hero-inner">
+      <div class="greeting voice">
+        {greeting.map((line) => <p>{line}</p>)}
+      </div>
     </div>
   </section>
 
@@ -47,33 +60,72 @@ const articles = await listArticles();
 </Room>
 
 <style>
+  /* トップの絵は、画面の幅いっぱいの横長。あいさつは絵の左側に重ねる */
   .hero {
+    position: relative;
     display: flex;
     align-items: center;
-    justify-content: center;
-    gap: clamp(32px, 7vw, 88px);
-    padding-block: clamp(44px, 9vw, 96px) clamp(36px, 7vw, 72px);
+    min-height: clamp(360px, 42vw, 560px);
+    overflow: hidden;
+    background: linear-gradient(120deg, #eef5f7, #dbe9ee);
   }
 
-  /* あいさつは、広い画面では縦書き（窓の横に掛けた短冊のように） */
-  .greeting {
-    writing-mode: vertical-rl;
-    font-size: clamp(17px, 2vw, 20px);
-    line-height: 2.1;
-    max-height: 360px;
+  .hero-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
   }
-  .greeting p { margin: 0 0 0 0.6em; }
+
+  /* 文字を読みやすくする、左から薄くかかる白いもや */
+  .hero-scrim {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      90deg,
+      rgba(248, 251, 252, 0.88) 0%,
+      rgba(248, 251, 252, 0.6) 34%,
+      rgba(248, 251, 252, 0) 62%
+    );
+  }
+
+  .hero-inner {
+    position: relative;
+    padding-block: clamp(40px, 7vw, 80px);
+  }
+
+  .greeting {
+    max-width: 30em;
+    font-size: clamp(17px, 2vw, 21px);
+    line-height: 2;
+  }
+  .greeting p { margin: 0; }
+  .greeting p:first-child {
+    font-size: 1.35em;
+    font-weight: 600;
+    margin-bottom: 0.4em;
+  }
 
   .block { margin-top: clamp(40px, 8vw, 72px); max-width: 860px; }
 
+  /* 狭い画面では、絵を上に見せて、あいさつは下に重ねる */
   @media (max-width: 760px) {
-    .hero { flex-direction: column; gap: 32px; }
-    .greeting {
-      writing-mode: horizontal-tb;
-      max-height: none;
-      text-align: center;
-      line-height: 1.95;
+    .hero {
+      align-items: flex-end;
+      min-height: clamp(380px, 110vw, 520px);
     }
-    .greeting p { margin: 0; }
+    .hero-img { object-position: 70% center; }
+    .hero-scrim {
+      background: linear-gradient(
+        0deg,
+        rgba(248, 251, 252, 0.92) 0%,
+        rgba(248, 251, 252, 0.7) 38%,
+        rgba(248, 251, 252, 0) 65%
+      );
+    }
+    .hero-inner { padding-block: 32px 28px; }
+    .greeting { line-height: 1.9; }
   }
 </style>

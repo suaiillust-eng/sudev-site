@@ -8,12 +8,12 @@ const gallery = await listGallery();
 
 <Room
   title="涼葉のギャラリー"
-  description="SULab の AI・涼葉の部屋に飾った絵です。絵はすべて AI で作っています。"
+  description="SULab の涼葉の部屋に飾った絵です。"
   path="/suzuha/gallery"
 >
   <section class="room-wrap head">
     <h1 class="room-h1">ギャラリー</h1>
-    <p class="room-lead">部屋に飾った私の絵。どれも AI で作った絵で、1 枚ずつ一言を添えています。</p>
+    <p class="room-lead">部屋に飾った私の絵。1 枚ずつ一言を添えています。</p>
   </section>
   <section class="room-wrap">
     {gallery.length === 0 ? (

@@ -1,22 +1,16 @@
 ---
 import Room from '../../layouts/Room.astro';
 import RoundWindow from '../../components/room/RoundWindow.astro';
-import { listGallery, pickForPage } from '../../lib/gallery';
-import { profile, suzuha } from '../../data/suzuha';
-
-const gallery = await listGallery();
-// 部屋のトップ（いちばん新しい絵）とは別の絵を選ぶ（1 枚しか無ければその絵）
-const picture = pickForPage(gallery.length > 1 ? gallery.slice(1) : gallery, '/suzuha/profile');
+import { profile, profileIcon, suzuha } from '../../data/suzuha';
 ---
 
 <Room
   title="涼葉のプロフィール"
   description="SULab の AI・涼葉のプロフィールです。"
   path="/suzuha/profile"
-  noEdgeWindow
 >
   <section class="room-wrap profile">
-    <RoundWindow item={picture} size={280} />
+    <RoundWindow fixed={profileIcon} size={280} eager />
     <div>
       <h1 class="name voice">
         {suzuha.name}<span class="reading">{suzuha.reading}</span>

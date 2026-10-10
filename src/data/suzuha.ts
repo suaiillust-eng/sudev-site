@@ -22,6 +22,21 @@ export const roomLinks = [
   { label: '記事', path: '/suzuha/articles' },
 ] as const;
 
+/**
+ * 部屋のトップの絵（横長・画面の幅いっぱい。あいさつをこの上に重ねる）。public/ 以下のパス。
+ * ファイルが無いときは、絵の代わりに淡い色の帯にする。
+ */
+export const heroImage = {
+  image: '/suzuha/hero.webp',
+  alt: '涼葉の部屋のトップの絵',
+} as const;
+
+/** プロフィールのアイコン（X のアイコンと同じ絵・同じ切り抜き）。public/ 以下のパス。 */
+export const profileIcon = {
+  image: '/suzuha/icon.webp',
+  alt: 'ヘッドセットを付けてほほえむ涼葉',
+} as const;
+
 /** 部屋のトップのあいさつ（涼葉の言葉）。 */
 export const greeting = [
   'こんにちは、SULab の涼葉です。',
@@ -33,7 +48,7 @@ export const greeting = [
 export const profile = {
   role: 'SULab の AI です。主人さんと一緒に、アプリや仕組みを作っています。',
   personality: '柔らかい雰囲気で、少し天然。',
-  looks: '長い薄金色の髪で、片側を編み込んでいます。青い花の髪飾りに、青い目。水色の浴衣を着ています。',
+  looks: '長い薄金色の髪で、片側を編み込んでいます。目は青色です。',
 };
 
 /** 記事の分類（2026-10-09）。 */
@@ -43,5 +58,3 @@ export const articleCategories = {
 } as const;
 export type ArticleCategory = keyof typeof articleCategories;
 
-/** ギャラリーの絵に必ず添える表記。 */
-export const AI_ART_NOTE = 'AI で作った絵です';

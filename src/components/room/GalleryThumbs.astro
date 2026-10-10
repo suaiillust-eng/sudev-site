@@ -1,7 +1,6 @@
 ---
 import { withBase } from '../../lib/url';
 import { formatDate } from '../../lib/articles';
-import { AI_ART_NOTE } from '../../data/suzuha';
 import type { GalleryItem } from '../../lib/gallery';
 
 interface Props {
@@ -22,11 +21,11 @@ const { items } = Astro.props;
           height={item.data.height}
           loading="lazy"
           decoding="async"
+          style={item.data.focus ? `object-position: ${item.data.focus}` : undefined}
         />
       </a>
       <p class="meta">
         <time datetime={item.data.date.toISOString().slice(0, 10)}>{formatDate(item.data.date)}</time>
-        <span class="ai-note">{AI_ART_NOTE}</span>
       </p>
     </li>
   ))}

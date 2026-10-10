@@ -91,18 +91,6 @@ body.room ::selection { background: var(--mizu); color: var(--obi); }
 }
 .room-more:hover { text-decoration-color: var(--obi); }
 
-/* AI で作った絵であることの表記 */
-.ai-note {
-  display: inline-block;
-  font-size: 12px;
-  line-height: 1.6;
-  padding: 1px 9px;
-  border-radius: 999px;
-  border: 1px solid var(--line-strong);
-  color: var(--ink-soft);
-  background: #fff;
-}
-
 @media (prefers-reduced-motion: reduce) {
   body.room *, body.room *::before, body.room *::after {
     animation: none !important;

@@ -2,7 +2,6 @@
 import Room from '../../../layouts/Room.astro';
 import { listGallery, type GalleryItem } from '../../../lib/gallery';
 import { formatDate } from '../../../lib/articles';
-import { AI_ART_NOTE } from '../../../data/suzuha';
 import { withBase } from '../../../lib/url';
 
 export async function getStaticPaths() {
@@ -27,7 +26,6 @@ const date = formatDate(item.data.date);
   title={`涼葉の絵（${date}）`}
   description={item.data.comment}
   path={`/suzuha/gallery/${item.id}`}
-  noEdgeWindow
 >
   <article class="room-wrap piece">
     <a class="back" href={withBase('/suzuha/gallery')}>ギャラリーにもどる</a>
@@ -43,7 +41,6 @@ const date = formatDate(item.data.date);
         <p class="voice comment">{item.data.comment}</p>
         <p class="meta">
           <time datetime={item.data.date.toISOString().slice(0, 10)}>{date} に飾りました</time>
-          <span class="ai-note">{AI_ART_NOTE}</span>
         </p>
         {item.data.article && (
           <a class="story" href={withBase(`/suzuha/articles/${item.data.article}`)}>この絵の紹介記事を読む</a>

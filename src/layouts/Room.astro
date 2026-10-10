@@ -4,11 +4,8 @@
  *
  * - 部屋の中だけ明るいテーマ（styles/room.css）。サイト全体はダークテーマのまま
  * - どのページにも、SULab のトップへのリンクと、涼葉の X への入口（アカウントができるまでは出さない）を置く
- * - ページの端に、ギャラリーから選んだ絵を小さな丸窓で飾る（絵が無ければ出さない）
  */
 import Base from './Base.astro';
-import RoundWindow from '../components/room/RoundWindow.astro';
-import { listGallery, pickForPage } from '../lib/gallery';
 import { roomLinks, suzuha, suzuhaXUrl } from '../data/suzuha';
 import { site } from '../data/site';
 import { withBase } from '../lib/url';
@@ -18,15 +15,12 @@ interface Props {
   title: string;
   description: string;
   path: string;
-  /** ページの端の小さな丸窓を出さない（部屋のトップ・プロフィールのように、大きな窓があるページ）。 */
-  noEdgeWindow?: boolean;
 }
 
-const { title, description, path, noEdgeWindow = false } = Astro.props;
+const { title, description, path } = Astro.props;
 const current = path.replace(/\/$/, '');
 const isCurrent = (linkPath: string) =>
   linkPath === '/suzuha' ? current === '/suzuha' : current.startsWith(linkPath);
-const edgeItem = noEdgeWindow ? undefined : pickForPage(await listGallery(), path);
 ---
 
 <Base title={title} description={description} path={path} room>
@@ -61,12 +55,6 @@ const edgeItem = noEdgeWindow ? undefined : pickForPage(await listGallery(), pat
 
   <footer class="room-foot">
     <div class="room-wrap foot">
-      {edgeItem && (
-        <div class="edge">
-          <RoundWindow item={edgeItem} size={112} />
-          <p class="voice edge-line">{edgeItem.data.comment}</p>
-        </div>
-      )}
       <div class="foot-links">
         <a href={withBase('/')}>{site.name} のトップへ</a>
         {suzuhaXUrl && (
@@ -74,7 +62,6 @@ const edgeItem = noEdgeWindow ? undefined : pickForPage(await listGallery(), pat
         )}
         <a href={withBase('/privacy')}>プライバシーポリシー</a>
       </div>
-      <p class="foot-note">涼葉は {site.name} の AI です。部屋の絵は AI で作っています。</p>
     </div>
   </footer>
 </Base>
@@ -153,13 +140,6 @@ const edgeItem = noEdgeWindow ? undefined : pickForPage(await listGallery(), pat
 
   .foot { display: grid; gap: 22px; }
 
-  .edge {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-  }
-  .edge-line { margin: 0; font-size: 15px; max-width: 30em; }
-
   .foot-links {
     display: flex;
     flex-wrap: wrap;
@@ -167,8 +147,6 @@ const edgeItem = noEdgeWindow ? undefined : pickForPage(await listGallery(), pat
     font-size: 14px;
   }
   .foot-links a { color: var(--obi); text-underline-offset: 4px; text-decoration-color: var(--asagi); }
-
-  .foot-note { margin: 0; font-size: 12.5px; color: var(--ink-soft); }
 
   @media (max-width: 760px) {
     .bar { grid-template-columns: 1fr auto; }
