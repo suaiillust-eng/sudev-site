@@ -15,15 +15,17 @@ interface Props {
   title: string;
   description: string;
   path: string;
+  /** X などで共有したときの絵（public/ 以下のパス）。既定は部屋の絵（サイト全体の SUdev の絵にしない）。 */
+  ogImage?: string;
 }
 
-const { title, description, path } = Astro.props;
+const { title, description, path, ogImage = '/suzuha/og.jpg' } = Astro.props;
 const current = path.replace(/\/$/, '');
 const isCurrent = (linkPath: string) =>
   linkPath === '/suzuha' ? current === '/suzuha' : current.startsWith(linkPath);
 ---
 
-<Base title={title} description={description} path={path} room>
+<Base title={title} description={description} path={path} ogImage={ogImage} room>
   <header class="room-bar">
     <div class="room-wrap bar">
       <a class="room-name voice" href={withBase('/suzuha')}>{suzuha.name}の部屋</a>
