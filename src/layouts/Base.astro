@@ -21,7 +21,9 @@ interface Props {
 
 const { title, description, ogImage = '/og.jpg', path = '/', room = false } = Astro.props;
 const pageTitle = title === site.name ? `${site.name} — 個人開発アプリ` : `${title} | ${site.name}`;
-const canonical = new URL(withBase(path), Astro.site ?? site.url).toString();
+// 公開先は build.format: 'directory' なので、本当の住所は末尾が / のページ（/suzuha/）。
+// 正式な URL も / で終える（ずれていると、X などが別のページとみなしたり、古いカードを使い続けたりする）
+const canonical = new URL(withBase(path).replace(/\/?$/, '/'), Astro.site ?? site.url).toString();
 const ogUrl = new URL(withBase(ogImage), Astro.site ?? site.url).toString();
 ---
 
