@@ -35,8 +35,12 @@ const ogUrl = new URL(withBase(ogImage), Astro.site ?? site.url).toString();
     <title>{pageTitle}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
-    <link rel="icon" type="image/png" href={withBase('/favicon.png')} />
-    <link rel="apple-touch-icon" href={withBase('/apple-touch-icon.png')} />
+    <!-- 涼葉の部屋のタブは涼葉のアイコン（プロフィールと同じ絵から作った public/suzuha/ の 2 つ） -->
+    <link rel="icon" type="image/png" href={withBase(room ? '/suzuha/favicon.png' : '/favicon.png')} />
+    <link
+      rel="apple-touch-icon"
+      href={withBase(room ? '/suzuha/apple-touch-icon.png' : '/apple-touch-icon.png')}
+    />
     <meta name="theme-color" content={room ? '#f8fbfc' : '#0a0b0e'} />
 
     <meta property="og:type" content="website" />
