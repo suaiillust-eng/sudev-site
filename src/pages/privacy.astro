@@ -4,7 +4,7 @@ import { site, xUrl } from '../data/site';
 import { withBase } from '../lib/url';
 
 /** ポリシー改定時はこの日付を更新する */
-const updatedAt = '2026年10月9日';
+const updatedAt = '2026年10月15日';
 ---
 
 <Base
@@ -46,17 +46,32 @@ const updatedAt = '2026年10月9日';
         リンク先での情報の取り扱いについては、各サービスのプライバシーポリシーをご確認ください。
       </p>
 
-      <h2>5. 各アプリのプライバシーポリシー</h2>
+      <h2>5. Google API の利用</h2>
+      <p>
+        SULab は、自らの YouTube チャンネルの数字（登録者数、再生回数、再生時間、クリック率など）を確認するために、Google の API（YouTube Data API、YouTube Analytics API）を利用しています。
+        利用は読み取りのみで、書き込みは行いません。
+      </p>
+      <p>
+        取得したデータは SULab の手元の機械にのみ保存し、第三者へ提供・販売することはなく、広告にも利用しません。
+        また、SULab 以外の方の Google アカウントのデータを収集することはありません。
+      </p>
+      <p>
+        Google API から受け取ったデータの利用は、
+        <a href="https://developers.google.com/terms/api-services-user-data-policy" target="_blank" rel="noopener">Google API Services User Data Policy</a>
+        （Limited Use の要件を含む）に従います。
+      </p>
+
+      <h2>6. 各アプリのプライバシーポリシー</h2>
       <p>
         各アプリで個別に定めているプライバシーポリシーは、アプリ内の設定画面、または App Store の配信ページからご確認いただけます。
       </p>
 
-      <h2>6. 本ポリシーの変更</h2>
+      <h2>7. 本ポリシーの変更</h2>
       <p>
         本ポリシーの内容は、必要に応じて変更することがあります。変更後の内容は本ページに掲載した時点から適用されます。
       </p>
 
-      <h2>7. お問い合わせ</h2>
+      <h2>8. お問い合わせ</h2>
       <p>
         本ポリシーに関するお問い合わせは、
         <a href={withBase('/contact')}>お問い合わせページ</a>
