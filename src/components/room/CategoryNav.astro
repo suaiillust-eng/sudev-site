@@ -1,32 +1,43 @@
 ---
-import { articleCategories, type ArticleCategory } from '../../data/suzuha';
 import { withBase } from '../../lib/url';
+import type { TopicSummary } from '../../lib/articles';
 
 interface Props {
-  /** いま見ている分類。すべてなら undefined。 */
-  current?: ArticleCategory | undefined;
+  /** 実際にあるカテゴリー（記事の数つき。listTopics の結果）。 */
+  topics: TopicSummary[];
+  /** すべての記事の数。 */
+  total: number;
+  /** いま見ているカテゴリーの slug。すべてなら undefined。 */
+  current?: string | undefined;
 }
 
-const { current } = Astro.props;
+const { topics, total, current } = Astro.props;
 const links = [
-  { label: 'すべて', href: withBase('/suzuha/articles'), active: current === undefined },
-  ...(Object.keys(articleCategories) as ArticleCategory[]).map((key) => ({
-    label: articleCategories[key],
-    href: withBase(`/suzuha/articles/category/${key}`),
-    active: current === key,
+  { label: 'すべて', count: total, href: withBase('/suzuha/articles'), active: current === undefined },
+  ...topics.map((topic) => ({
+    label: topic.label,
+    count: topic.count,
+    href: withBase(`/suzuha/articles/category/${topic.slug}`),
+    active: current === topic.slug,
   })),
 ];
 ---
 
-<nav class="cats" aria-label="記事の分類">
+<nav class="cats" aria-label="記事のカテゴリー">
   {links.map((link) => (
-    <a href={link.href} aria-current={link.active ? 'page' : undefined}>{link.label}</a>
+    <a href={link.href} aria-current={link.active ? 'page' : undefined}>
+      <span class="label">{link.label}</span><span class="count">{link.count}</span>
+    </a>
   ))}
 </nav>
 
 <style>
   .cats { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 22px; }
   .cats a {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 6px;
+    max-width: 100%;
     padding: 5px 13px;
     border-radius: 999px;
     border: 1px solid var(--line-strong);
@@ -35,6 +46,9 @@ const links = [
     text-decoration: none;
     background: #fff;
   }
+  .cats .label { overflow-wrap: anywhere; }
+  .cats .count { font-size: 11.5px; color: var(--ink-soft); }
   .cats a:hover { border-color: var(--asagi); }
   .cats a[aria-current='page'] { background: var(--obi); border-color: var(--obi); color: #fff; }
+  .cats a[aria-current='page'] .count { color: rgba(255, 255, 255, 0.78); }
 </style>

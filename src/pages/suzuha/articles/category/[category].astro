@@ -2,35 +2,54 @@
 import Room from '../../../../layouts/Room.astro';
 import ArticleList from '../../../../components/room/ArticleList.astro';
 import CategoryNav from '../../../../components/room/CategoryNav.astro';
-import { listArticles } from '../../../../lib/articles';
-import { articleCategories, type ArticleCategory } from '../../../../data/suzuha';
+import { articleTopic, listArticles, listTopics } from '../../../../lib/articles';
+import { articleCategories } from '../../../../data/suzuha';
 
-export function getStaticPaths() {
-  return (Object.keys(articleCategories) as ArticleCategory[]).map((category) => ({
-    params: { category },
-    props: { category },
+/**
+ * カテゴリーごとの記事の一覧（2026-10-17）。涼葉が付けたカテゴリー（topicSlug）ごとに 1 ページ。
+ * 前からある URL も残す: illustration はイラスト紹介のカテゴリーと同じページ、dev は開発の話の記事すべて（案内には出さない）。
+ */
+export async function getStaticPaths() {
+  const articles = await listArticles();
+  const topics = listTopics(articles);
+  const paths = topics.map((topic) => ({
+    params: { category: topic.slug },
+    props: { slug: topic.slug, label: topic.label, kind: 'topic' as const },
   }));
+  if (!topics.some((topic) => topic.slug === 'illustration'))
+    paths.push({ params: { category: 'illustration' }, props: { slug: 'illustration', label: articleCategories.illustration, kind: 'topic' as const } });
+  if (!topics.some((topic) => topic.slug === 'dev'))
+    paths.push({ params: { category: 'dev' }, props: { slug: 'dev', label: articleCategories.dev, kind: 'dev' as const } });
+  return paths;
 }
 
 interface Props {
-  category: ArticleCategory;
+  slug: string;
+  label: string;
+  kind: 'topic' | 'dev';
 }
 
-const { category } = Astro.props;
-const label = articleCategories[category];
-const articles = (await listArticles()).filter((article) => article.data.category === category);
+const { slug, label, kind } = Astro.props;
+const all = await listArticles();
+const topics = listTopics(all);
+const articles =
+  kind === 'dev'
+    ? all.filter((article) => article.data.category === 'dev')
+    : all.filter((article) => articleTopic(article).slug === slug);
 ---
 
 <Room
   title={`涼葉の記事（${label}）`}
   description={`SULab の涼葉の記事のうち、${label}の一覧です。`}
-  path={`/suzuha/articles/category/${category}`}
+  path={`/suzuha/articles/category/${slug}`}
 >
   <section class="room-wrap head">
-    <h1 class="room-h1">記事：{label}</h1>
+    <p class="kicker">カテゴリー</p>
+    <h1 class="room-h1">{label}</h1>
+    <p class="room-lead">{articles.length} 本の記事</p>
   </section>
   <section class="room-wrap list">
-    <CategoryNav current={category} />
+    <CategoryNav topics={topics} total={all.length} current={kind === 'dev' ? undefined : slug} />
     {articles.length === 0 ? (
       <p class="room-empty">まだ{label}の記事はありません。</p>
     ) : (
@@ -41,6 +60,7 @@ const articles = (await listArticles()).filter((article) => article.data.categor
 
 <style>
   .head { padding-block: clamp(40px, 8vw, 72px) 28px; }
-  .room-h1 { font-size: clamp(26px, 6vw, 34px); font-weight: 700; color: var(--obi); margin: 0; }
+  .kicker { margin: 0 0 6px; font-size: 13px; color: var(--ink-soft); letter-spacing: 0.08em; }
+  .room-h1 { font-size: clamp(26px, 6vw, 34px); font-weight: 700; color: var(--obi); margin: 0 0 6px; overflow-wrap: anywhere; }
   .list { max-width: 860px; }
 </style>

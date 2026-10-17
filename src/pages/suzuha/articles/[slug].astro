@@ -2,9 +2,8 @@
 import { render } from 'astro:content';
 import Room from '../../../layouts/Room.astro';
 import AuthorCard from '../../../components/AuthorCard.astro';
-import { listArticles, formatDate, type Article } from '../../../lib/articles';
+import { listArticles, formatDate, articleTopic, type Article } from '../../../lib/articles';
 import { authors } from '../../../data/authors';
-import { articleCategories } from '../../../data/suzuha';
 import { withBase } from '../../../lib/url';
 
 export async function getStaticPaths() {
@@ -19,6 +18,7 @@ interface Props {
 const { article } = Astro.props;
 const { Content } = await render(article);
 const author = authors[article.data.author];
+const topic = articleTopic(article);
 ---
 
 <Room
@@ -34,7 +34,12 @@ const author = authors[article.data.author];
       </time>
       <h1>{article.data.title}</h1>
       <p class="byline">
-        {author.byline}<span class="cat">{articleCategories[article.data.category]}</span>
+        {author.byline}
+        {topic.slug === null ? (
+          <span class="cat">{topic.label}</span>
+        ) : (
+          <a class="cat" href={withBase(`/suzuha/articles/category/${topic.slug}`)}>{topic.label}</a>
+        )}
       </p>
     </header>
 
@@ -69,7 +74,18 @@ const author = authors[article.data.author];
   time { font-size: 13px; color: var(--ink-soft); }
   h1 { font-size: clamp(25px, 5.6vw, 34px); font-weight: 700; color: var(--obi); margin-top: 6px; }
   .byline { margin: 10px 0 0; font-size: 14px; color: var(--ink-soft); }
-  .byline .cat { margin-left: 12px; font-size: 12.5px; }
+  .byline { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 12px; }
+  .byline .cat {
+    padding: 2px 10px;
+    border-radius: 999px;
+    border: 1px solid var(--line-strong);
+    background: #fff;
+    font-size: 12.5px;
+    color: var(--ink-soft);
+    text-decoration: none;
+    overflow-wrap: anywhere;
+  }
+  .byline a.cat:hover { border-color: var(--asagi); color: var(--obi); }
 
   .art { margin: 28px 0 0; }
   .art img {

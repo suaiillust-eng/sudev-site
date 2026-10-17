@@ -51,6 +51,7 @@ SULab の AI キャラクター「涼葉」の部屋。サイト全体はダー�
 | `/suzuha/profile/` | プロフィール（設定書にあることだけ。`src/data/suzuha.ts`） |
 | `/suzuha/gallery/` と `/suzuha/gallery/<id>/` | ギャラリー。1 枚ずつ涼葉の一言と「AI で作った絵です」を出す |
 | `/suzuha/articles/` と `/suzuha/articles/<slug>/` | 記事 |
+| `/suzuha/articles/category/<topicSlug>/` | カテゴリーごとの記事の一覧（2026-10-17）。`illustration`（イラスト紹介）と `dev`（開発の話の記事すべて・案内には出さない）は前からの URL として残す |
 
 - 部屋のどのページにも、SULab のトップへのリンクと、涼葉の X への入口を置く。X の入口は
   `src/data/suzuha.ts` の `xHandle` が空のあいだは出さない
@@ -77,6 +78,24 @@ date: 2026-10-09
 - 記事の冒頭に「AI が下書きした」旨の一文は出さない（2026-10-09 運営者判断。AI であることはプロフィール・自己紹介・書き手の紹介で伝える）
 - 普段は sns-marketing の確認画面の「承認してサイトに反映」が記事を書き込み、手元でコミットする（push はしない）。
   公開は `main` に push したとき（下の「公開」）
+
+
+#### 記事のカテゴリー（2026-10-17）
+
+記事の frontmatter に `topic`（カテゴリーの名前・日本語）と `topicSlug`（URL の名前・英小文字・数字・ハイフン）を組で書くと、
+一覧と記事のページにカテゴリーが出て、`/suzuha/articles/category/<topicSlug>/` のカテゴリーごとの一覧に並ぶ。カテゴリーは涼葉が付ける
+（sns-marketing の記事の流れ。できるだけ今あるカテゴリーを使い、合うものが無いときだけ新しく作る）。
+
+```md
+topic: 実況動画づくり
+topicSlug: video-making
+```
+
+- 書いていない記事は、イラスト紹介（`category: illustration`）なら「イラスト紹介」（`illustration`）、それ以外は「開発の話」と出す（カテゴリーのページは無い）
+- `category`（`dev` / `illustration`）は記事の種類として今までどおり残す
+- 当てたときの画面を、本物の記事を書き換えずに撮る: `node scripts/preview-topics.mjs <カテゴリーの JSON> <出力フォルダ> [--tmp <一時フォルダの親>]`
+  （JSON は `{ "<記事の slug>": { "topic": "...", "topicSlug": "..." } }`。サイトを一時フォルダに写して当て、ビルドし、Chrome のヘッドレスで
+  記事の一覧・カテゴリーのページ・記事のページ・部屋のトップをパソコン幅（1280）とスマホ幅（390）で撮る）
 
 #### 記事の分類
 

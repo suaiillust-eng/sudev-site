@@ -19,8 +19,18 @@ const articles = defineCollection({
     date: z.coerce.date(),
     /** 書き手。今は涼葉だけ。 */
     author: z.literal('suzuha').default('suzuha'),
-    /** 分類（2026-10-09）。`dev`（開発の話）/ `illustration`（イラスト紹介）。 */
+    /** 記事の種類（2026-10-09）。`dev`（開発の話）/ `illustration`（イラスト紹介）。 */
     category: z.enum(['dev', 'illustration']).default('dev'),
+    /**
+     * カテゴリーの名前（2026-10-17。涼葉が付ける。例「実況動画づくり」）。無い記事は、種類（category）の名前で出す。
+     * 一覧・記事のページに出し、カテゴリーごとの一覧（/suzuha/articles/category/<topicSlug>）に並べる。
+     */
+    topic: z.string().min(1).optional(),
+    /** カテゴリーの URL の名前（英小文字・数字・ハイフン。例 video-making）。topic と組で書く。 */
+    topicSlug: z
+      .string()
+      .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/)
+      .optional(),
     /** イラスト紹介の記事の絵（public/ 以下のパス）と説明。ギャラリーの絵と同じもの。 */
     image: z.string().optional(),
     imageAlt: z.string().optional(),
