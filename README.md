@@ -208,9 +208,13 @@ export const featuredApps = ['data-jong', 'my-meshi', 'lexlinka'];
 HP の要望フォームと、アプリ内の要望フォーム（旅跡など）は、どちらも `sudev-site-analytics` の
 `POST /request` に `{ app, message }` を送る。受信した要望は KV の `req:*` に入る。
 
-- 一覧 `GET /requests` と削除 `DELETE /requests/<id>` は **`?token=<SYNC_TOKEN>` が必須**
-  （2026-09-24 から。誰でも読めて消せる状態だったため）。管制室の「ご要望」へ同期する
-  ときもこのトークンを付けること。
+- 一覧 `GET /requests` と削除 `DELETE /requests/<id>` は **`Authorization: Bearer <SYNC_TOKEN>`
+  の見出しが必須**（2026-09-24 から。誰でも読めて消せる状態だったため）。管制室の「ご要望」へ
+  同期するときも、この見出しを付けて送ること。
+- 2026-11-12 から、URL の `?token=<SYNC_TOKEN>` で渡す形は受け付けない（URL は記録に残るため）。
+  `POST /app-downloads/sync`・`POST /app-stats/sync`・`GET /debug/explore-app` も同じく見出しで渡す。
+- 例: `curl -H "Authorization: Bearer $SYNC_TOKEN" https://sudev-site-analytics.tabiato.workers.dev/requests`
+- Worker のコードは GitHub の非公開の置き場 `suaiillust-eng/sudev-site-analytics` にある。
 
 ## 公開（GitHub Pages）
 
